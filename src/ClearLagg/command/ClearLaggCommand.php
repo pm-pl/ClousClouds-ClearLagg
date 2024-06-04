@@ -21,7 +21,7 @@ class ClearLaggCommand extends Command {
         if (!$this->testPermission($sender)) {
             return false;
         }
-        $this->plugin->getClearLagManager()->clearLag();
+        $this->plugin->getClearLaggManager()->clearLagg();
         $sender->sendMessage("All dropped items have been cleared.");
         return true;
     }
