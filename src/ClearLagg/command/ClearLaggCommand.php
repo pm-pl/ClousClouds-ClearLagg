@@ -5,13 +5,13 @@ namespace ClearLagg\command;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
-use pocketmine\plugin\Plugin;
+use ClearLagg\Main;
 
 class ClearLaggCommand extends Command {
 
-    private Plugin $plugin;
+    private Main $plugin;
 
-    public function __construct(Plugin $plugin) {
+    public function __construct(Main $plugin) {
         parent::__construct("clearlagg", "Clears all dropped items", "/clearlagg", []);
         $this->plugin = $plugin;
         $this->setPermission("clearlagg.use");
