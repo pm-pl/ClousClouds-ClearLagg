@@ -14,7 +14,7 @@ class ClearLaggManager {
         $this->plugin = $plugin;
     }
 
-    public function clearLag(): void {
+    public function clearLagg(): void {
         $count = 0;
 
         foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
