@@ -11,7 +11,7 @@ use ClearLagg\command\ClearLaggCommand;
 
 class Main extends PluginBase {
 
-    private ClearLaggManager $clearLagManager;
+    private ClearLaggManager $clearLaggManager;
     private ConfigManager $configManager;
 
     public function onEnable(): void {
@@ -24,11 +24,11 @@ class Main extends PluginBase {
         );
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
-        $this->getServer()->getCommandMap()->register("clearlag", new ClearLaggCommand($this));
+        $this->getServer()->getCommandMap()->register("clearlagg", new ClearLaggCommand($this));
     }
 
-    public function getClearLagManager(): ClearLaggManager {
-        return $this->clearLagManager;
+    public function getClearLaggManager(): ClearLaggManager {
+        return $this->clearLaggManager;
     }
 
     public function getConfigManager(): ConfigManager {
