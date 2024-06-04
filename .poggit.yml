@@ -5,4 +5,5 @@ branches:
 projects: 
   ClearLagg:
     path: ""
+    icon: icon.png
 ...
