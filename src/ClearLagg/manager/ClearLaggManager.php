@@ -6,7 +6,7 @@ use pocketmine\utils\TextFormat;
 use pocketmine\entity\object\ItemEntity;
 use ClearLagg\Main;
 
-class ClearLagManager {
+class ClearLaggManager {
 
     private Main $plugin;
 
