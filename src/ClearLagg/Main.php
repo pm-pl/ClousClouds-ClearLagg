@@ -16,15 +16,15 @@ class Main extends PluginBase {
 
     public function onEnable(): void {
         $this->configManager = new ConfigManager($this);
-        $this->clearLagManager = new ClearLaggManager($this);
+        $this->clearLaggManager = new ClearLaggManager($this);
 
         $this->getScheduler()->scheduleRepeatingTask(
-            new ClearLagTask($this),
+            new ClearLaggTask($this),
             20 * $this->configManager->getConfig()->get("interval", 300)
         );
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
-        $this->getServer()->getCommandMap()->register("clearlag", new ClearLagCommand($this));
+        $this->getServer()->getCommandMap()->register("clearlag", new ClearLaggCommand($this));
     }
 
     public function getClearLagManager(): ClearLaggManager {
