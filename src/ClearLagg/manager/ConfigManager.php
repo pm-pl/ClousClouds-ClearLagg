@@ -12,10 +12,6 @@ class ConfigManager {
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
-        $this->init();
-    }
-
-    public function init(): void {
         $this->plugin->saveDefaultConfig();
         $this->config = $this->plugin->getConfig();
     }
