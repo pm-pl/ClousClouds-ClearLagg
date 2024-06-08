@@ -1,0 +1,3 @@
+interval: 300
+broadcast: true
+message: "Cleared {count} items!"
