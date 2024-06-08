@@ -2,9 +2,9 @@
 
 namespace ClearLagg\manager;
 
-use pocketmine\utils\TextFormat;
-use pocketmine\entity\object\ItemEntity;
 use ClearLagg\Main;
+use pocketmine\Server;
+use pocketmine\entity\object\ItemEntity;
 
 class ClearLaggManager {
 
@@ -16,8 +16,7 @@ class ClearLaggManager {
 
     public function clearLagg(): void {
         $count = 0;
-
-        foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
+        foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
             foreach ($world->getEntities() as $entity) {
                 if ($entity instanceof ItemEntity) {
                     $entity->flagForDespawn();
@@ -25,10 +24,9 @@ class ClearLaggManager {
                 }
             }
         }
-
-        $message = str_replace("{count}", (string) $count, $this->plugin->getConfigManager()->getConfig()->get("message", "Cleared {count} items!"));
         if ($this->plugin->getConfigManager()->getConfig()->get("broadcast", true)) {
-            $this->plugin->getServer()->broadcastMessage(TextFormat::GREEN . $message);
+            $message = str_replace("{count}", (string)$count, $this->plugin->getConfigManager()->getConfig()->get("message", "Cleared {count} items!"));
+            Server::getInstance()->broadcastMessage($message);
         }
     }
 }
