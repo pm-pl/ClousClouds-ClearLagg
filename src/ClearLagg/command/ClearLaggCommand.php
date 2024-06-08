@@ -4,10 +4,13 @@ namespace ClearLagg\command;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\player\Player;
+use pocketmine\plugin\PluginOwned;
+use pocketmine\plugin\PluginOwnedTrait;
 use ClearLagg\Main;
 
-class ClearLaggCommand extends Command {
+class ClearLaggCommand extends Command implements PluginOwned {
+
+    use PluginOwnedTrait;
 
     private Main $plugin;
 
@@ -24,5 +27,9 @@ class ClearLaggCommand extends Command {
         $this->plugin->getClearLaggManager()->clearLagg();
         $sender->sendMessage("All dropped items have been cleared.");
         return true;
+    }
+
+    public function getOwningPlugin(): Main {
+        return $this->plugin;
     }
 }
