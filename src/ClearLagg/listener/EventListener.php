@@ -18,8 +18,8 @@ class EventListener implements Listener {
     public function onEntitySpawn(EntitySpawnEvent $event): void {
         $entity = $event->getEntity();
         if ($entity instanceof ItemEntity) {
-            // Baca properti $plugin untuk menghindari kesalahan PHPStan
-            $this->plugin->getLogger()->info("ItemEntity spawned.");
+            // Use debug level to reduce console spam
+            $this->plugin->getLogger()->debug("ItemEntity spawned.");
         }
     }
 }
