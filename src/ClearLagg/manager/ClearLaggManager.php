@@ -24,6 +24,7 @@ class ClearLaggManager {
                 }
             }
         }
+        $this->plugin->getStatsManager()->addClearedItems($count);
         if ($this->plugin->getConfigManager()->getConfig()->get("broadcast", true)) {
             $message = str_replace("{count}", (string)$count, $this->plugin->getConfigManager()->getConfig()->get("message", "Cleared {count} items!"));
             Server::getInstance()->broadcastMessage($message);
