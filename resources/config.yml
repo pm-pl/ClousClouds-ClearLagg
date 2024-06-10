@@ -1,3 +1,12 @@
 interval: 300
 broadcast: true
 message: "Cleared {count} items!"
+exclude_named: true
+worlds:
+  world_nether:
+    interval: 600
+    broadcast: false
+  world_end:
+    interval: 1200
+    broadcast: true
+    message: "End items cleared!"
