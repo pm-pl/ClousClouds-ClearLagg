@@ -24,6 +24,13 @@ class ClearLaggCommand extends Command implements PluginOwned {
         if (!$this->testPermission($sender)) {
             return false;
         }
+        
+        if (isset($args[0]) && $args[0] === "stats") {
+            $stats = $this->plugin->getStatsManager()->getStats();
+            $sender->sendMessage("Items cleared: " . $stats['total'] . "\nSince last restart: " . $stats['current']);
+            return true;
+        }
+        
         $this->plugin->getClearLaggManager()->clearLagg();
         $sender->sendMessage("All dropped items have been cleared.");
         return true;
