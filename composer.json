@@ -1,5 +1,4 @@
 {
-    // Project Name
     "name": "xpocketmc/clearlagg",
     "description": "ClearLagg plugin for PocketMine-MP",
     "type": "pocketmine-plugin",
