@@ -1,12 +1,22 @@
-interval: 300
-broadcast: true
-message: "Cleared {count} items!"
-exclude_named: true
+# ClearLagg configuration file
+
+# Please not edit config version
+config-version: 2
+
+# Time in seconds between automatic clears
+auto-clear-interval: 300
+
+# World-specific settings
 worlds:
+  world:
+    enable-auto-clear: true
   world_nether:
-    interval: 600
-    broadcast: false
-  world_end:
-    interval: 1200
-    broadcast: true
-    message: "End items cleared!"
+    enable-auto-clear: true
+  world_the_end:
+    enable-auto-clear: true
+
+# Player notifications
+notify-players:
+  enable: true
+  message: "All dropped items will be cleared in 60 seconds!"
+  countdown: 60
