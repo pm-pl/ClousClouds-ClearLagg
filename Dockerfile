@@ -1,39 +1,24 @@
-# Use the official PHP 8.1 CLI image as a base
+# Gunakan image PHP yang sesuai
 FROM php:8.1-cli
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libzip-dev \
-        unzip \
-        git \
-        autoconf \
-        g++ \
-        make
+# Instal ekstensi PHP yang diperlukan
+RUN docker-php-ext-install mbstring xml
 
-# Install mbstring PHP extension
-RUN docker-php-ext-install mbstring
+# Salin sumber kode dan plugin.yml ke dalam container
+COPY src /usr/src/myapp/src
+COPY plugin.yml /usr/src/myapp/
 
-# Install chunkutils2 manually (assuming it's a library or tool)
-RUN git clone https://github.com/pmmp/ChunkUtils2.git /tmp/chunkutils2 \
-    && cd /tmp/chunkutils2 \
-    && phpize \
-    && ./configure \
-    && make \
-    && make install \
-    && docker-php-ext-enable chunkutils2
+# Salin PocketMine-MP.phar ke dalam container
+ADD https://github.com/pmmp/PocketMine-MP/releases/latest/download/PocketMine-MP.phar /usr/src/myapp/PocketMine-MP.phar
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Set workdir ke direktori sumber
+WORKDIR /usr/src/myapp
 
-# Set the working directory
-WORKDIR /app
+# Build plugin menjadi .phar
+RUN mkdir -p plugins/ClearLagg \
+    && cp -R src/* plugins/ClearLagg/ \
+    && cp plugin.yml plugins/ClearLagg/ \
+    && php PocketMine-MP.phar --make-plugin ClearLagg \
+    && mv ClearLagg.phar /usr/src/myapp/ClearLagg.phar
 
-# Copy application files
-COPY . /app
-
-# Install Composer dependencies
-RUN composer install --no-progress --prefer-dist --optimize-autoloader
-
-# Command to run tests
-CMD ["./vendor/bin/phpunit", "--coverage-text"]
+CMD ["php", "-v"]
