@@ -11,10 +11,17 @@ RUN apt-get update \
         g++ \
         make
 
-# Install PHP extensions
-RUN pecl install chunkutils2 \
-    && docker-php-ext-enable chunkutils2 \
-    && docker-php-ext-install mbstring
+# Install mbstring PHP extension
+RUN docker-php-ext-install mbstring
+
+# Install chunkutils2 manually (assuming it's a library or tool)
+RUN git clone https://github.com/pmmp/ChunkUtils2.git /tmp/chunkutils2 \
+    && cd /tmp/chunkutils2 \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
+    && docker-php-ext-enable chunkutils2
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
