@@ -25,6 +25,9 @@ After installing the plugin, a configuration file `config.yml` will be generated
 ```yaml
 # ClearLagg configuration file
 
+# Please Don't Edit configuration ver
+config-version: 2
+
 # Time in seconds between automatic clears
 auto-clear-interval: 300
 
