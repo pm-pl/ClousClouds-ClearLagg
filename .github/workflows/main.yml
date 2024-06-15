@@ -16,23 +16,39 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
-        run: |
-          docker build -t ghcr.io/xpocketmc/clearlagg:latest .
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader
 
-      - name: Push Docker image
+      - name: Download PocketMine-MP.phar
+        run: wget -q -O PocketMine-MP.phar https://github.com/pmmp/PocketMine-MP/releases/latest/download/PocketMine-MP.phar
+
+      - name: Create plugins/ClearLagg directory
+        run: mkdir -p plugins/ClearLagg
+
+      - name: Copy source files to plugins/ClearLagg
+        run: cp -R src/* plugins/ClearLagg/
+
+      - name: Copy plugin.yml to plugins/ClearLagg
+        run: cp plugin.yml plugins/ClearLagg/
+
+      - name: Build ClearLagg Plugin
         run: |
-          docker push ghcr.io/xpocketmc/clearlagg:latest
+          cd plugins
+          php ../PocketMine-MP.phar --make-plugin ClearLagg
+          mv ClearLagg.phar ../builds/
 
       - name: Create Release
         id: create_release
@@ -40,22 +56,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.0
-          name: Release v1.0.0
+          tag_name: 1.0.0
+          name: Release 1.0.0
           files: builds/ClearLagg.phar
           draft: false
           prerelease: false
 
-      - name: Get Release ID
-        id: get_release_id
-        run: echo "Release ID is ${{ steps.create_release.outputs.id }}"
+      - name: Build Docker image
+        run: |
+          echo "FROM php:8.3-cli" > Dockerfile
+          echo "RUN docker-php-ext-install mbstring xml" >> Dockerfile
+          echo "COPY src /usr/src/myapp/src" >> Dockerfile
+          echo "COPY plugin.yml /usr/src/myapp/" >> Dockerfile
+          echo "ADD https://github.com/pmmp/PocketMine-MP/releases/latest/download/PocketMine-MP.phar /usr/src/myapp/PocketMine-MP.phar" >> Dockerfile
+          echo "WORKDIR /usr/src/myapp" >> Dockerfile
+          echo "RUN mkdir -p plugins/ClearLagg \\" >> Dockerfile
+          echo "    && cp -R src/* plugins/ClearLagg/ \\" >> Dockerfile
+          echo "    && cp plugin.yml plugins/ClearLagg/ \\" >> Dockerfile
+          echo "    && php PocketMine-MP.phar --make-plugin ClearLagg \\" >> Dockerfile
+          echo "    && mv ClearLagg.phar /usr/src/myapp/ClearLagg.phar" >> Dockerfile
+          echo "CMD [\"php\", \"-v\"]" >> Dockerfile
+          docker build -t ghcr.io/${{ github.repository_owner }}/clearlagg:latest .
 
-      - name: Publish Package
-        run: echo "Publishing package..."
-
-      - name: Set Package ID
-        id: set_package_id
-        run: echo "::set-output name=package_id::$(uuidgen)"
-
-      - name: Notify Package ID
-        run: echo "Package ID is ${{ steps.set_package_id.outputs.package_id }}"
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository_owner }}/clearlagg:latest
