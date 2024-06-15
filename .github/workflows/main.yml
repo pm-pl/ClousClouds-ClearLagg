@@ -41,7 +41,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v1.0.0  # Ganti dengan versi plugin yang sesuai
-        release_name: Release v1.0.0  # Nama rilis yang sesuai
+        name: Release v1.0.0  # Nama rilis yang sesuai
         files: builds/ClearLagg.zip
         draft: false
         prerelease: false
