@@ -3,7 +3,7 @@ name: Build and Release ClearLagg Plugin
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*-release'
   workflow_dispatch:
 
 jobs:
@@ -55,7 +55,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
           files: |
             build/ClearLagg.zip
             package/ClearLagg-Package.zip
