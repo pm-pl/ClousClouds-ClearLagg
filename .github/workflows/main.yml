@@ -28,11 +28,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/clearlagg:latest .
+          docker build -t ghcr.io/xpocketmc/clearlagg:latest .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/clearlagg:latest
+          docker push ghcr.io/xpocketmc/clearlagg:latest
 
       - name: Create Release
         id: create_release
