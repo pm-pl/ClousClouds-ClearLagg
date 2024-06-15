@@ -19,18 +19,27 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'  # Versi PHP yang diperlukan untuk PocketMine-MP
+          php-version: '8.0'
           extensions: mbstring, xml
 
-      - name: Install PocketMine-MP phar (if needed)
+      - name: Download PocketMine-MP.phar
         run: |
           wget -q -O PocketMine-MP.phar https://pmmp.io/api/installer | bash
 
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Create plugins/ClearLagg directory
+        run: mkdir -p plugins/ClearLagg
+
+      - name: Copy source files to plugins/ClearLagg
+        run: cp -R src/* plugins/ClearLagg/
+
+      - name: Copy plugin.yml to plugins/ClearLagg
+        run: cp plugin.yml plugins/ClearLagg/
+
       - name: Build ClearLagg Plugin
         run: |
-          mkdir -p plugins/ClearLagg
-          cp -R src/* plugins/ClearLagg/
-          cp plugin.yml plugins/ClearLagg/
           cd plugins
           php PocketMine-MP.phar --make-plugin ClearLagg
           mv ClearLagg.phar ../builds/
@@ -41,8 +50,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          tag_name: v1.0.0  # Ganti dengan versi plugin yang sesuai
-          name: Release v1.0.0  # Nama rilis yang sesuai
+          tag_name: v1.0.0
+          name: Release v1.0.0
           files: builds/ClearLagg.phar
           draft: false
           prerelease: false
