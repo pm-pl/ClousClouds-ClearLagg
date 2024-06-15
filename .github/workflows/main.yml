@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p plugins/ClearLagg
           cp -R src/* plugins/ClearLagg/
-          cp ../plugin.yml plugins/ClearLagg/
+          cp plugin.yml plugins/ClearLagg/
           cd plugins
           php PocketMine-MP.phar --make-plugin ClearLagg
           mv ClearLagg.phar ../builds/
