@@ -1,37 +1,15 @@
-# Gunakan image PHP 8.1-cli yang sesuai
-FROM php:8.1-cli
+# Gunakan image PocketMine-MP yang sudah ada
+FROM pmmp/pocketmine-mp:php8.1-latest
 
-# Instal ekstensi PHP yang diperlukan
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libicu-dev \
-    libonig-dev \
-    libxslt-dev \
-    && docker-php-ext-install -j$(nproc) \
-    mbstring \
-    xml \
-    bcmath \
-    && pecl install chunkutils2 crypto \
-    && docker-php-ext-enable chunkutils2 crypto leveldb
+# Salin source code dan plugin.yml ke dalam container
+COPY src /home/pocketmine/plugins/ClearLagg/src
+COPY plugin.yml /home/pocketmine/plugins/ClearLagg/
 
-# Salin sumber kode dan plugin.yml ke dalam container
-COPY src /usr/src/myapp/src
-COPY plugin.yml /usr/src/myapp/
-
-# Salin PocketMine-MP.phar ke dalam container
-ADD https://github.com/pmmp/PocketMine-MP/releases/latest/download/PocketMine-MP.phar /usr/src/myapp/PocketMine-MP.phar
-
-# Set workdir ke direktori sumber
-WORKDIR /usr/src/myapp
+# Set workdir ke direktori PocketMine
+WORKDIR /home/pocketmine
 
 # Build plugin menjadi .phar
-RUN mkdir -p plugins/ClearLagg \
-    && cp -R src/* plugins/ClearLagg/ \
-    && cp plugin.yml plugins/ClearLagg/ \
-    && php PocketMine-MP.phar --make-plugin ClearLagg \
-    && mv ClearLagg.phar /usr/src/myapp/ClearLagg.phar
+RUN ./bin/php7/bin/php PocketMine-MP.phar --makeplugin ClearLagg \
+    && mv ClearLagg.phar /home/pocketmine/ClearLagg.phar
 
-CMD ["php", "-v"]
+CMD ["./bin/php7/bin/php", "-v"]
