@@ -1,4 +1,4 @@
-# Gunakan image PHP 8.1 yang sesuai
+# Gunakan image PHP 8.1-cli yang sesuai
 FROM php:8.1-cli
 
 # Instal ekstensi PHP yang diperlukan
@@ -13,7 +13,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) \
     mbstring \
     xml \
-    chunkutils2
+    bcmath \
+    && pecl install chunkutils2 crypto \
+    && docker-php-ext-enable chunkutils2 crypto
 
 # Salin sumber kode dan plugin.yml ke dalam container
 COPY src /usr/src/myapp/src
