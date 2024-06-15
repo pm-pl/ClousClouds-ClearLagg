@@ -1,4 +1,4 @@
-name: Build ClearLagg Plugin
+name: Build ClearLagg Plugin and Create Release
 
 on:
   push:
@@ -13,49 +13,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.0'  # Versi PHP yang diperlukan untuk PocketMine-MP
-        extensions: mbstring, xml
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'  # Versi PHP yang diperlukan untuk PocketMine-MP
+          extensions: mbstring, xml
 
-    - name: Install PocketMine-MP phar (if needed)
-      run: |
-        wget -q -O PocketMine-MP.phar https://pmmp.io/api/installer | bash
+      - name: Install PocketMine-MP phar (if needed)
+        run: |
+          wget -q -O PocketMine-MP.phar https://pmmp.io/api/installer | bash
 
-    - name: Build ClearLagg Plugin
-      run: |
-        mkdir -p plugins/ClearLagg
-        cp -R src/* plugins/ClearLagg/
-        cd plugins
-        zip -r ClearLagg.zip ClearLagg
-        mv ClearLagg.zip ../builds/
+      - name: Build ClearLagg Plugin
+        run: |
+          mkdir -p plugins/ClearLagg
+          cp -R src/* plugins/ClearLagg/
+          cp plugin.yml plugins/ClearLagg/
+          cd plugins
+          php PocketMine-MP.phar --make-plugin ClearLagg
+          mv ClearLagg.phar ../builds/
 
-    - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v1.0.0  # Ganti dengan versi plugin yang sesuai
-        name: Release v1.0.0  # Nama rilis yang sesuai
-        files: builds/ClearLagg.zip
-        draft: false
-        prerelease: false
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.0  # Ganti dengan versi plugin yang sesuai
+          name: Release v1.0.0  # Nama rilis yang sesuai
+          files: builds/ClearLagg.phar
+          draft: false
+          prerelease: false
 
-    - name: Get Release ID
-      id: get_release_id
-      run: echo "Release ID is ${{ steps.create_release.outputs.id }}"
+      - name: Get Release ID
+        id: get_release_id
+        run: echo "Release ID is ${{ steps.create_release.outputs.id }}"
 
-    - name: Publish Package
-      run: echo "Publishing package..."
+      - name: Publish Package
+        run: echo "Publishing package..."
 
-    - name: Set Package ID
-      id: set_package_id
-      run: echo "::set-output name=package_id::$(uuidgen)"
+      - name: Set Package ID
+        id: set_package_id
+        run: echo "::set-output name=package_id::$(uuidgen)"
 
-    - name: Notify Package ID
-      run: echo "Package ID is ${{ steps.set_package_id.outputs.package_id }}"
+      - name: Notify Package ID
+        run: echo "Package ID is ${{ steps.set_package_id.outputs.package_id }}"
