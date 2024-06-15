@@ -9,6 +9,8 @@ use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\entity\EntityDespawnEvent;
 use pocketmine\plugin\PluginLogger;
 use ClearLagg\Main;
+use pocketmine\entity\Human;
+use pocketmine\player\Player;
 
 class EventListener implements Listener {
 
