@@ -7,10 +7,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\entity\EntityDespawnEvent;
-use pocketmine\plugin\PluginLogger;
 use ClearLagg\Main;
-use pocketmine\entity\Human;
-use pocketmine\player\Player;
 
 class EventListener implements Listener {
 
@@ -46,7 +43,7 @@ class EventListener implements Listener {
     public function onEntitySpawn(EntitySpawnEvent $event): void {
         $entity = $event->getEntity();
         // Log entity spawn for debugging purposes, can be disabled in production
-        $this->plugin->getLogger()->debug("Entity spawned: " . $entity->getName());
+        $this->plugin->getLogger()->debug("Entity spawned: " . $entity->getType());
     }
 
     /**
@@ -56,6 +53,6 @@ class EventListener implements Listener {
     public function onEntityDespawn(EntityDespawnEvent $event): void {
         $entity = $event->getEntity();
         // Log entity despawn for debugging purposes, can be disabled in production
-        $this->plugin->getLogger()->debug("Entity despawned: " . $entity->getName());
+        $this->plugin->getLogger()->debug("Entity despawned: " . $entity->getType());
     }
 }
