@@ -1,21 +1,25 @@
+# Use the official PHP 8.1 CLI image as a base
 FROM php:8.1-cli
 
-# Install dependencies and PHP extensions
-RUN apt-get update && apt-get install -y \
-    libzip-dev \
-    unzip \
-    git \
-    autoconf \
-    g++ \
-    make \
-    && pecl install chunkutils2 \
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libzip-dev \
+        unzip \
+        git \
+        autoconf \
+        g++ \
+        make
+
+# Install PHP extensions
+RUN pecl install chunkutils2 \
     && docker-php-ext-enable chunkutils2 \
     && docker-php-ext-install mbstring
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
 # Copy application files
@@ -24,5 +28,5 @@ COPY . /app
 # Install Composer dependencies
 RUN composer install --no-progress --prefer-dist --optimize-autoloader
 
-# Run PHPUnit tests
+# Command to run tests
 CMD ["./vendor/bin/phpunit", "--coverage-text"]
