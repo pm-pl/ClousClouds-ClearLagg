@@ -1,6 +1,6 @@
 name: ClearLagg
 main: ClearLagg\Main
-version: 1.0.0-Beta
+version: 1.0.0-release
 api: [5.0.0]
 load: POSTWORLD
 author: NurAzliYT, XPocketMC
@@ -8,7 +8,6 @@ description: A plugin to reduce lag by clearing dropped items.
 commands:
   clearlagg:
     description: Clears all dropped items.
-    usage: "/clearlagg [stats]"
     permission: clearlagg.use
 permissions:
   clearlagg.use:
