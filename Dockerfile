@@ -1,5 +1,5 @@
-# Gunakan image PHP 8.0 yang sesuai
-FROM php:8.0-cli
+# Gunakan image PHP 8.1 yang sesuai
+FROM php:8.1-cli
 
 # Instal ekstensi PHP yang diperlukan
 RUN apt-get update && apt-get install -y \
