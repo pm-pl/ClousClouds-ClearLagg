@@ -22,17 +22,40 @@ jobs:
         php-version: '8.0'  # Versi PHP yang diperlukan untuk PocketMine-MP
         extensions: mbstring, xml
 
-    - name: Install dependencies
+    - name: Install PocketMine-MP phar (if needed)
       run: |
-        composer install
+        wget -q -O PocketMine-MP.phar https://pmmp.io/api/installer | bash
 
-    - name: Build plugin
+    - name: Build ClearLagg Plugin
       run: |
-        mkdir -p builds
-        zip -r builds/ClearLagg.zip src
+        mkdir -p plugins/ClearLagg
+        cp -R src/* plugins/ClearLagg/
+        cd plugins
+        zip -r ClearLagg.zip ClearLagg
+        mv ClearLagg.zip ../builds/
 
-    - name: Archive build artifacts
-      uses: actions/upload-artifact@v2
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: ClearLagg-build
-        path: builds/ClearLagg.zip
+        tag_name: v1.0.0  # Ganti dengan versi plugin yang sesuai
+        release_name: Release v1.0.0  # Nama rilis yang sesuai
+        files: builds/ClearLagg.zip
+        draft: false
+        prerelease: false
+
+    - name: Get Release ID
+      id: get_release_id
+      run: echo "Release ID is ${{ steps.create_release.outputs.id }}"
+
+    - name: Publish Package
+      run: echo "Publishing package..."
+
+    - name: Set Package ID
+      id: set_package_id
+      run: echo "::set-output name=package_id::$(uuidgen)"
+
+    - name: Notify Package ID
+      run: echo "Package ID is ${{ steps.set_package_id.outputs.package_id }}"
