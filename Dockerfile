@@ -1,5 +1,5 @@
 # Gunakan image PocketMine-MP yang sudah ada
-FROM pmmp/pocketmine-mp:php8.1-latest
+FROM pmmp/pocketmine-mp:latest
 
 # Salin source code dan plugin.yml ke dalam container
 COPY src /home/pocketmine/plugins/ClearLagg/src
