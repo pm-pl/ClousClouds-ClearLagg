@@ -1,9 +1,10 @@
-name: Build and Release Plugin
+name: Build and Release ClearLagg Plugin
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,56 +17,38 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.0'
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libzip-dev \
-            unzip \
-            git \
-            autoconf \
-            g++ \
-            make
+        run: composer install --no-dev --optimize-autoloader
 
-      - name: Update pecl.php.net channel
-        run: pecl channel-update pecl.php.net
-
-      - name: Install zip extension via pecl
-        run: |
-          sudo pecl install channel://pecl.php.net/zip-1.22.3
-          docker-php-ext-enable zip
-
-      - name: Install mbstring extension
-        run: docker-php-ext-install mbstring
-
-      - name: Install Composer
-        run: |
-          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-
-      - name: Install dependencies with Composer
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      - name: Run tests
+        run: ./vendor/bin/phpunit
 
       - name: Build plugin
         run: |
           mkdir -p build
-          zip -r build/plugin.zip src
+          zip -r build/ClearLagg.zip . -x 'vendor/*' -x '.github/*' -x 'tests/*' -x '.git/*'
 
-      - name: Upload build artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: plugin-build
-          path: build
+          name: ClearLagg
+          path: build/ClearLagg.zip
 
-      - name: Create Draft Release
-        id: create_release
-        uses: marvinpinto/github-action-create-release@v1
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ClearLagg
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/ClearLagg.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.set_version.outputs.version }}
-          release_name: Release ${{ steps.set_version.outputs.version }}
-          draft: true
-          prerelease: false
