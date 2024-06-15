@@ -2,20 +2,65 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: composer init
-      run: composer init
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0' # Specify the PHP version you need
+        extensions: mbstring, xml # Add any required PHP extensions here
+
+    - name: Install dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+
+    - name: Run tests
+      run: ./vendor/bin/phpunit --coverage-text
+
+    - name: Build plugin
+      run: |
+        mkdir -p build
+        zip -r build/plugin.zip src
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: plugin-build
+        path: build/plugin.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: plugin-build
+        path: build
+
+    - name: Create Draft Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        draft: true
+        files: build/plugin.zip
+        body: |
+          ## Changes in this release
+          - Fixed command not working
