@@ -23,7 +23,7 @@ jobs:
           extensions: mbstring, xml
 
       - name: Install dependencies
-        run: composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-chunkutils2 --ignore-platform-req=ext-crypto --ignore-platform-req=ext-leveldb
+        run: composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-chunkutils2 --ignore-platform-req=ext-crypto --ignore-platform-req=ext-leveldb --ignore-platform-req=ext-morton
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
