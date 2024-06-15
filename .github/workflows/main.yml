@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p plugins/ClearLagg
           cp -R src/* plugins/ClearLagg/
-          cp plugin.yml plugins/ClearLagg/
+          cp ../plugin.yml plugins/ClearLagg/
           cd plugins
           php PocketMine-MP.phar --make-plugin ClearLagg
           mv ClearLagg.phar ../builds/
@@ -39,7 +39,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           tag_name: v1.0.0  # Ganti dengan versi plugin yang sesuai
           name: Release v1.0.0  # Nama rilis yang sesuai
