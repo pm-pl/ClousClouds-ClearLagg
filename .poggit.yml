@@ -2,6 +2,7 @@
 build-by-default: true
 branches:
 - main
+- 1.1.0
 projects: 
   ClearLagg:
     path: ""
