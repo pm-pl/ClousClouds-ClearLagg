@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     xml \
     bcmath \
     && pecl install chunkutils2 crypto \
-    && docker-php-ext-enable chunkutils2 crypto
+    && docker-php-ext-enable chunkutils2 crypto leveldb
 
 # Salin sumber kode dan plugin.yml ke dalam container
 COPY src /usr/src/myapp/src
