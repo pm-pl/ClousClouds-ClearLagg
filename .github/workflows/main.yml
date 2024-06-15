@@ -1,63 +1,38 @@
-name: Build and Release ClearLagg Plugin
+name: Build ClearLagg Plugin
 
 on:
   push:
-    tags:
-      - 'v*.*.*-release'
-  workflow_dispatch:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.0'
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'  # Versi PHP yang diperlukan untuk PocketMine-MP
+        extensions: mbstring, xml
 
-      - name: Build plugin
-        run: |
-          mkdir -p build
-          zip -r build/ClearLagg.zip . -x '.git/*' -x '.github/*' -x 'tests/*' -x 'build/*'
+    - name: Install dependencies
+      run: |
+        composer install
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ClearLagg
-          path: build/ClearLagg.zip
+    - name: Build plugin
+      run: |
+        mkdir -p builds
+        zip -r builds/ClearLagg.zip src
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: ClearLagg
-
-      - name: Create Package
-        run: |
-          mkdir -p package
-          cp build/ClearLagg.zip package/
-          cd package
-          zip -r ClearLagg-Package.zip ClearLagg.zip
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
-          files: |
-            build/ClearLagg.zip
-            package/ClearLagg-Package.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ClearLagg-build
+        path: builds/ClearLagg.zip
