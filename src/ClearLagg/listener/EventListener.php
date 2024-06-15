@@ -43,16 +43,16 @@ class EventListener implements Listener {
     public function onEntitySpawn(EntitySpawnEvent $event): void {
         $entity = $event->getEntity();
         // Log entity spawn for debugging purposes, can be disabled in production
-        $this->plugin->getLogger()->debug("Entity spawned: " . $entity->getType());
+        $this->plugin->getLogger()->debug("Entity spawned: " . $entity->getNetworkTypeId());
     }
 
     /**
      * Called when an entity despawns in the world.
-     * @param EntityDespawnEvent $event
+     * @param EntityDespawnEvent $event)
      */
     public function onEntityDespawn(EntityDespawnEvent $event): void {
         $entity = $event->getEntity();
         // Log entity despawn for debugging purposes, can be disabled in production
-        $this->plugin->getLogger()->debug("Entity despawned: " . $entity->getType());
+        $this->plugin->getLogger()->debug("Entity despawned: " . $entity->getNetworkTypeId());
     }
 }
