@@ -9,6 +9,7 @@ use ClearLagg\listener\EventListener;
 use ClearLagg\manager\ClearLaggManager;
 use ClearLagg\manager\ConfigManager;
 use ClearLagg\manager\StatsManager;
+use ClearLagg\task\AutoClearTask;
 
 class Main extends PluginBase implements Listener {
 
