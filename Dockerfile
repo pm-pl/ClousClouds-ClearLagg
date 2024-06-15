@@ -1,8 +1,19 @@
-# Gunakan image PHP yang sesuai
-FROM php:8.1-cli
+# Gunakan image PHP 8.0 yang sesuai
+FROM php:8.0-cli
 
 # Instal ekstensi PHP yang diperlukan
-RUN docker-php-ext-install mbstring xml
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libicu-dev \
+    libonig-dev \
+    libxslt-dev \
+    && docker-php-ext-install -j$(nproc) \
+    mbstring \
+    xml \
+    chunkutils2
 
 # Salin sumber kode dan plugin.yml ke dalam container
 COPY src /usr/src/myapp/src
