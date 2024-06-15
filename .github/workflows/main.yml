@@ -13,47 +13,69 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Build and Test with Docker
-      run: |
-        docker build -t my-plugin .
-        docker run my-plugin
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
 
-    - name: Build plugin
-      run: |
-        mkdir -p build
-        zip -r build/plugin.zip src
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libzip-dev \
+            unzip \
+            git \
+            autoconf \
+            g++ \
+            make
+          pecl install channel://pecl.php.net/zip-1.21.10
+          docker-php-ext-enable zip
+          docker-php-ext-install mbstring
 
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: plugin-build
-        path: build/plugin.zip
+      - name: Install Composer
+        run: |
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+      - name: Install dependencies with Composer
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Build plugin
+        run: |
+          mkdir -p build
+          zip -r build/plugin.zip src
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-build
+          path: build
 
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Download build artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: plugin-build
-        path: build
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: plugin-build
+          path: build
 
-    - name: Create Draft Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
-        draft: true
-        files: build/plugin.zip
-        body: |
-          ## Changes in this release
-          - Fixed Command Not Working
+      - name: Create Draft Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          draft: true
+          files: build/plugin.zip
+          body: |
+            ## Changes in this release
+            - Add detailed change log here
