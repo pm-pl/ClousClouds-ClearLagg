@@ -1,10 +1,7 @@
-name: CI
+name: Build and Release Plugin
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -32,14 +29,16 @@ jobs:
             g++ \
             make
 
+      - name: Update pecl.php.net channel
+        run: pecl channel-update pecl.php.net
+
       - name: Install zip extension via pecl
         run: |
-          pecl install channel://pecl.php.net/zip-1.22.3
+          sudo pecl install channel://pecl.php.net/zip-1.22.3
           docker-php-ext-enable zip
 
       - name: Install mbstring extension
-        run: |
-          docker-php-ext-install mbstring
+        run: docker-php-ext-install mbstring
 
       - name: Install Composer
         run: |
@@ -60,28 +59,13 @@ jobs:
           name: plugin-build
           path: build
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: plugin-build
-          path: build
-
       - name: Create Draft Release
-        uses: actions/create-release@v1
+        id: create_release
+        uses: marvinpinto/github-action-create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          tag_name: v${{ steps.set_version.outputs.version }}
+          release_name: Release ${{ steps.set_version.outputs.version }}
           draft: true
-          files: build/plugin.zip
-          body: |
-            ## Changes in this release
-            - Add detailed change log here
+          prerelease: false
