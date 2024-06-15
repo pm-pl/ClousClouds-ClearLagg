@@ -31,8 +31,14 @@ jobs:
             autoconf \
             g++ \
             make
-          pecl install channel://pecl.php.net/zip-1.21.10
+
+      - name: Install zip extension via pecl
+        run: |
+          pecl install channel://pecl.php.net/zip-1.22.3
           docker-php-ext-enable zip
+
+      - name: Install mbstring extension
+        run: |
           docker-php-ext-install mbstring
 
       - name: Install Composer
