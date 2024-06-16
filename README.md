@@ -1,7 +1,9 @@
 # ClearLagg
 
 <img src="https://i.ibb.co.com/gW2N2Hz/OIG1-removebg-preview.png">
+
 ---
+
 ClearLagg is a plugin for PocketMine-MP designed to reduce lag by periodically clearing dropped items in the world. It provides configurable options and commands to manage item clearing, player notifications, and detailed statistics.
 
 ## Features
