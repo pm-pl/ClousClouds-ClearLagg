@@ -1,13 +1,13 @@
 <?php
 
-namespace ClearLagg\listener;
+namespace NurAzliYT\ClearLagg\listener;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\entity\EntityDespawnEvent;
-use ClearLagg\Main;
+use NurAzliYT\ClearLagg\Main;
 
 class EventListener implements Listener {
 
