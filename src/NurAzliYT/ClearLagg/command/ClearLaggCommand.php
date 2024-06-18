@@ -1,13 +1,13 @@
 <?php
 
-namespace ClearLagg\command;
+namespace NurAzliYT\ClearLagg\command;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\plugin\Plugin;
-use ClearLagg\Main;
+use NurAzliYT\ClearLagg\Main;
 
 class ClearLaggCommand extends Command implements PluginOwned {
 
