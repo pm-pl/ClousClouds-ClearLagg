@@ -1,8 +1,8 @@
 <?php
 
-namespace ClearLagg\task;
+namespace NurAzliYT\ClearLagg\task;
 
-use ClearLagg\Main;
+use NurAzliYT\ClearLagg\Main;
 use pocketmine\scheduler\Task;
 use pocketmine\player\Player;
 
