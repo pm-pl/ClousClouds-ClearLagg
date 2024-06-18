@@ -1,6 +1,6 @@
 <?php
 
-namespace ClearLagg\manager;
+namespace NurAzliYT\ClearLagg\manager;
 
 class StatsManager {
 
