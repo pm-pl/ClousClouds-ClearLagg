@@ -29,16 +29,16 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: nurazliyt
           password: ${{ secrets.TOKEN }}
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/clearlagg:latest .
+          docker build -t ghcr.io/nurazliyt/clearlagg:latest .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/clearlagg:latest
+          docker push ghcr.io/nurazliyt/clearlagg:latest
 
       - name: Extract ClearLagg.phar from Docker image
         run: |
