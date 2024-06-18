@@ -1,15 +1,15 @@
 <?php
 
-namespace ClearLagg;
+namespace NurAzliYT\ClearLagg;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
-use ClearLagg\command\ClearLaggCommand;
-use ClearLagg\listener\EventListener;
-use ClearLagg\manager\ClearLaggManager;
-use ClearLagg\manager\ConfigManager;
-use ClearLagg\manager\StatsManager;
-use ClearLagg\task\AutoClearTask;
+use NurAzliYT\ClearLagg\command\ClearLaggCommand;
+use NurAzliYT\ClearLagg\listener\EventListener;
+use NurAzliYT\ClearLagg\manager\ClearLaggManager;
+use NurAzliYT\ClearLagg\manager\ConfigManager;
+use NurAzliYT\ClearLagg\manager\StatsManager;
+use NurAzliYT\ClearLagg\task\AutoClearTask;
 
 class Main extends PluginBase implements Listener {
 
