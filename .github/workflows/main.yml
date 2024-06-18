@@ -27,7 +27,7 @@ jobs:
         curl -sL https://get.pmmp.io | bash -s - -r
 
     - name: Install dependencies
-      run: composer install
+      run: composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-chunkutils2 --ignore-platform-req=ext-crypto --ignore-platform-req=ext-leveldb --ignore-platform-req=ext-morton --ignore-platform-req=ext-pmmpthread
 
     - name: Copy plugin source
       run: |
