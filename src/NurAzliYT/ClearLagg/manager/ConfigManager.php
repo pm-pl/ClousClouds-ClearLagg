@@ -1,9 +1,9 @@
 <?php
 
-namespace ClearLagg\manager;
+namespace NurAzliYT\ClearLagg\manager;
 
 use pocketmine\utils\Config;
-use ClearLagg\Main;
+use NurAzliYT\ClearLagg\Main;
 
 class ConfigManager {
 
