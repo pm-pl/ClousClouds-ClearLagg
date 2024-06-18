@@ -2,7 +2,5 @@
     "name": "xpocketmc/clearlagg",
     "description": "ClearLagg plugin for PocketMine-MP",
     "type": "pocketmine-plugin",
-    "require": {
-        "pocketmine/pocketmine-mp": "^5.16.0"
-    }
+
 }
