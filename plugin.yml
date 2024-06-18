@@ -1,5 +1,5 @@
 name: ClearLagg
-main: XPocketMC\ClearLagg\Main
+main: NurAzliYT\ClearLagg\Main
 version: 1.0.0-Beta
 api: [5.0.0]
 load: POSTWORLD
