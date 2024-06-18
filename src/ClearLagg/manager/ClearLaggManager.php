@@ -1,8 +1,8 @@
 <?php
 
-namespace ClearLagg\manager;
+namespace NurAzliYT\ClearLagg\manager;
 
-use ClearLagg\Main;
+use NurAzliYT\ClearLagg\Main;
 use pocketmine\Server;
 use pocketmine\entity\object\ItemEntity;
 
