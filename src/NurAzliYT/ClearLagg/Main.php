@@ -68,7 +68,7 @@ class Main extends PluginBase implements Listener {
                 private $message;
                 private $countdown;
 
-                public function __construct($plugin, $message, $countdown) {
+                public function __construct(Main $plugin, string $message, int $countdown) {
                     $this->plugin = $plugin;
                     $this->message = $message;
                     $this->countdown = $countdown;
