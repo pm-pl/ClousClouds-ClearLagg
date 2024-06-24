@@ -3,8 +3,7 @@
 namespace NurAzliYT\ClearLagg;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\TextFormat;
-use pocketmine\scheduler\Task;
+use pocketmine\event\Listener;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\listener\EventListener;
 use NurAzliYT\ClearLagg\manager\ClearLaggManager;
@@ -23,6 +22,8 @@ class Main extends PluginBase implements Listener {
     /** @var StatsManager */
     private StatsManager $statsManager;
 
+    /** @var onEnable */
+
     public function onEnable(): void {
         $this->saveDefaultConfig();
         $this->configManager = new ConfigManager($this);
@@ -32,16 +33,7 @@ class Main extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->getServer()->getCommandMap()->register("clearlagg", new ClearLaggCommand($this));
 
-        $interval = $this->getConfig()->get("auto-clear-interval", 300);
-        if (!is_int($interval) || $interval <= 0) {
-            $this->getLogger()->warning("auto-clear-interval in config is invalid, using default value 300 seconds.");
-            $interval = 300;
-        }
-
-        $this->getLogger()->info("Scheduling AutoClearTask with interval: " . $interval . " seconds.");
-        $this->getScheduler()->scheduleRepeatingTask(new AutoClearTask($this), 20 * $interval);
-
-        $this->notifyPlayers();
+        $this->getScheduler()->scheduleRepeatingTask(new AutoClearTask($this), 20 * $this->getConfig()->get("auto-clear-interval"));
     }
 
     public function getClearLaggManager(): ClearLaggManager {
@@ -54,31 +46,5 @@ class Main extends PluginBase implements Listener {
 
     public function getStatsManager(): StatsManager {
         return $this->statsManager;
-    }
-
-    private function notifyPlayers(): void {
-        $notifyConfig = $this->getConfig()->get("notify-players", []);
-        if ($notifyConfig["enable"]) {
-            $message = $notifyConfig["message"] ?? "All dropped items will be cleared in 60 seconds!";
-            $countdown = $notifyConfig["countdown"] ?? 60;
-
-            $this->getScheduler()->scheduleRepeatingTask(new class($this, $message, $countdown) extends Task {
-                private $plugin;
-                private $message;
-                private $countdown;
-
-                public function __construct(Main $plugin, string $message, int $countdown) {
-                    $this->plugin = $plugin;
-                    $this->message = $message;
-                    $this->countdown = $countdown;
-                }
-
-                private function sendNotification(): void {
-                    foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
-                        $player->sendMessage(TextFormat::RED . str_replace("{seconds}", (string)$this->countdown, $this->message));
-                    }
-                }
-            }, 20 * $countdown);
-        }
     }
 }
