@@ -22,8 +22,6 @@ class Main extends PluginBase implements Listener {
     /** @var StatsManager */
     private StatsManager $statsManager;
 
-    /** @var onEnable */
-
     public function onEnable(): void {
         $this->saveDefaultConfig();
         $this->configManager = new ConfigManager($this);
