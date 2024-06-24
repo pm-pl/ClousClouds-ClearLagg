@@ -74,10 +74,6 @@ class Main extends PluginBase implements Listener {
                     $this->countdown = $countdown;
                 }
 
-                public function onRun(int $currentTick): void {
-                    $this->sendNotification();
-                }
-
                 private function sendNotification(): void {
                     foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
                         $player->sendMessage(TextFormat::RED . str_replace("{seconds}", (string)$this->countdown, $this->message));
