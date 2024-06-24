@@ -2,11 +2,13 @@
 
 namespace NurAzliYT\ClearLagg\manager;
 
+use pocketmine\scheduler\Task;
 use NurAzliYT\ClearLagg\Main;
 use pocketmine\Server;
-use pocketmine\entity\object\ItemEntity;
+use pocketmine\player\Player;
+use pocketmine\entity\Entity;
 
-class ClearLaggManager {
+class ClearLaggManager extends Task {
 
     private Main $plugin;
 
@@ -14,20 +16,29 @@ class ClearLaggManager {
         $this->plugin = $plugin;
     }
 
-    public function clearLagg(): void {
-        $count = 0;
-        foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
-            foreach ($world->getEntities() as $entity) {
-                if ($entity instanceof ItemEntity) {
-                    $entity->flagForDespawn();
-                    $count++;
+    public function onRun(): void {
+        $this->clearEntities();
+    }
+
+    private function clearEntities(): void {
+        $config = $this->plugin->getClearLaggConfig();
+        $entitiesToClear = ["item", "zombie", "skeleton", "creeper", "spider", "witch"];
+
+        foreach ($config->get("worlds", []) as $worldName => $settings) {
+            if ($settings["enable-auto-clear"]) {
+                $world = Server::getInstance()->getWorldManager()->getWorldByName($worldName);
+                if ($world !== null) {
+                    foreach ($world->getEntities() as $entity) {
+                        if (!$entity instanceof Player && in_array(strtolower($entity->getName()), $entitiesToClear)) {
+                            $entity->flagForDespawn();
+                        }
+                    }
                 }
             }
         }
-        $this->plugin->getStatsManager()->addClearedItems($count);
-        if ($this->plugin->getConfigManager()->getConfig()->get("broadcast", true)) {
-            $message = str_replace("{count}", (string)$count, $this->plugin->getConfigManager()->getConfig()->get("message", "Cleared {count} items!"));
-            Server::getInstance()->broadcastMessage($message);
+        if ($config->get("notify-players.enable", true)) {
+            $this->plugin->notifyPlayers($config->get("notify-players.message", "All dropped items will be cleared"), $config->get("notify-players.countdown", 60));
         }
+        $this->plugin->getLogger()->info("Entities cleared to reduce lag.");
     }
 }
