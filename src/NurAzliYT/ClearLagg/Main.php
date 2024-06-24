@@ -4,6 +4,7 @@ namespace NurAzliYT\ClearLagg;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
+use pocketmine\utils\TextFormat;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\listener\EventListener;
 use NurAzliYT\ClearLagg\manager\ClearLaggManager;
@@ -31,7 +32,14 @@ class Main extends PluginBase implements Listener {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->getServer()->getCommandMap()->register("clearlagg", new ClearLaggCommand($this));
 
-        $this->getScheduler()->scheduleRepeatingTask(new AutoClearTask($this), 20 * $this->getConfig()->get("auto-clear-interval"));
+        $interval = $this->getConfig()->get("auto-clear-interval", 300);
+        if(!is_int($interval) || $interval <= 0){
+            $this->getLogger()->warning("auto-clear-interval in config is invalid, using default value 300 seconds.");
+            $interval = 300;
+        }
+
+        $this->getLogger()->info("Scheduling AutoClearTask with interval: " . $interval . " seconds.");
+        $this->getScheduler()->scheduleRepeatingTask(new AutoClearTask($this), 20 * $interval);
     }
 
     public function getClearLaggManager(): ClearLaggManager {
