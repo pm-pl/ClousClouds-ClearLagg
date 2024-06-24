@@ -5,6 +5,7 @@ namespace NurAzliYT\ClearLagg;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\utils\TextFormat;
+use pocketmine\scheduler\Task;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\listener\EventListener;
 use NurAzliYT\ClearLagg\manager\ClearLaggManager;
@@ -62,7 +63,7 @@ class Main extends PluginBase implements Listener {
             $message = $notifyConfig["message"] ?? "All dropped items will be cleared in 60 seconds!";
             $countdown = $notifyConfig["countdown"] ?? 60;
 
-            $this->getScheduler()->scheduleRepeatingTask(new class($this, $message, $countdown) extends \pocketmine\scheduler\Task {
+            $this->getScheduler()->scheduleRepeatingTask(new class($this, $message, $countdown) extends Task {
                 private $plugin;
                 private $message;
                 private $countdown;
