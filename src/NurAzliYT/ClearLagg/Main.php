@@ -146,7 +146,7 @@ class Main extends PluginBase {
 
     public function onDisable(): void {
         if ($this->clearTaskHandler instanceof TaskHandler) {
-            $this->getScheduler()->cancelTask($this->clearTaskHandler->getTaskId());
+            $this->clearTaskHandler->cancel();
         }
     }
 }
