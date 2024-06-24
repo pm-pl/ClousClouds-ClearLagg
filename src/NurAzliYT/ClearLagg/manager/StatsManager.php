@@ -2,23 +2,24 @@
 
 namespace NurAzliYT\ClearLagg\manager;
 
-use pocketmine\scheduler\Task;
-use pocketmine\utils\TextFormat;
-use pocketmine\plugin\PluginBase;
-
 class StatsManager {
 
-    private PluginBase $plugin;
+    private int $totalItemsCleared = 0;
+    private int $currentSessionItemsCleared = 0;
 
-    public function __construct(PluginBase $plugin) {
-        $this->plugin = $plugin;
+    public function addClearedItems(int $count): void {
+        $this->totalItemsCleared += $count;
+        $this->currentSessionItemsCleared += $count;
     }
 
-    public function getStats(): string {
-        $entityCount = 0;
-        foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
-            $entityCount += count($world->getEntities());
-        }
-        return TextFormat::GREEN . "Current entity count: " . TextFormat::WHITE . $entityCount;
+    public function getStats(): array {
+        return [
+            'total' => $this->totalItemsCleared,
+            'current' => $this->currentSessionItemsCleared
+        ];
+    }
+
+    public function resetCurrentSession(): void {
+        $this->currentSessionItemsCleared = 0;
     }
 }
