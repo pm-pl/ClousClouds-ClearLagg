@@ -75,7 +75,10 @@ class Main extends PluginBase implements Listener {
                 }
 
                 public function onRun(int $currentTick): void {
-                    // Gunakan parameter $currentTick untuk menyesuaikan pesan atau fungsi lainnya jika diperlukan
+                    $this->sendNotification();
+                }
+
+                private function sendNotification(): void {
                     foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
                         $player->sendMessage(TextFormat::RED . str_replace("{seconds}", (string)$this->countdown, $this->message));
                     }
