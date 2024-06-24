@@ -124,24 +124,24 @@ class Main extends PluginBase {
         $resourceId = 13940;
         
         $this->getLogger()->info("Checking for updates...");
-        Internet::getURL("https://poggit.pmmp.io/releases.json?name=" . $pluginName, 10, [], function (string $response, string $error = null) use ($pluginName, $resourceId): void {
-            if ($error !== null) {
-                $this->getLogger()->warning("Failed to check for updates: $error");
-                return;
-            }
-            
-            $data = json_decode($response, true);
-            if (isset($data[$pluginName])) {
-                $latestVersion = $data[$pluginName][0]["version"];
-                if (version_compare($this->getDescription()->getVersion(), $latestVersion, "<")) {
-                    $this->getLogger()->info("A new version ($latestVersion) is available! Update at: https://poggit.pmmp.io/r/$resourceId");
-                } else {
-                    $this->getLogger()->info("Plugin is up to date.");
-                }
-            } else {
-                $this->getLogger()->warning("Failed to check for updates: Data for $pluginName not found.");
-            }
-        });
+         Internet::getURL("https://poggit.pmmp.io/releases.json?name=" . $pluginName, 10, [], function (string $response, string $error = null) use ($pluginName, $resourceId): void {
+         if ($error !== null) {
+             $this->getLogger()->warning("Failed to check for updates: $error");
+             return;
+         }
+
+        $data = json_decode($response, true);
+         if (isset($data[$pluginName])) {
+         $latestVersion = $data[$pluginName][0]["version"];
+         if (version_compare($this->getDescription()->getVersion(), $latestVersion, "<")) {
+             $this->getLogger()->info("A new version ($latestVersion) is available! Update at: https://poggit.pmmp.io/r/$resourceId");
+         } else {
+             $this->getLogger()->info("Plugin is up to date.");
+         }
+      } else {
+             $this->getLogger()->warning("Failed to check for updates: Data for $pluginName not found.");
+    }
+});
     }
 
     public function onDisable(): void {
