@@ -121,7 +121,7 @@ class Main extends PluginBase {
 
     private function checkUpdates(): void {
         $pluginName = "ClearLagg";
-        $resourceId = 13940; // Replace with your resource ID on poggit or spigot
+        $resourceId = 13940;
         
         $this->getLogger()->info("Checking for updates...");
         Internet::getURL("https://poggit.pmmp.io/releases.json?name=" . $pluginName, 10, [], function (string $response, string $error = null) use ($pluginName, $resourceId): void {
