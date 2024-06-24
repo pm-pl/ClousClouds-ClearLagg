@@ -7,5 +7,4 @@ use NurAzliYT\ClearLagg\Main;
 final class NurAzliYT extends Main{
   /** Copyright 2024 NurAzliYT */
   /** Anyone who plagiarizes without our permission will violate state laws */
-   }
 }
