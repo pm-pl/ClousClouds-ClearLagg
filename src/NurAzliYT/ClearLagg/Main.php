@@ -9,7 +9,6 @@ use pocketmine\Server;
 use pocketmine\world\World;
 use pocketmine\entity\object\ItemEntity;
 use pocketmine\utils\TextFormat;
-use pocketmine\utils\Internet;
 use JackMD\UpdateNotifier\UpdateNotifier;
 
 class Main extends PluginBase {
@@ -30,7 +29,7 @@ class Main extends PluginBase {
     public function onEnable(): void {
         $this->loadConfigValues();
 
-        UpdateNotifier::checkUpdate($this->getDescription()->getName(), $this->getDescription()->getVersion());
+        UpdateNotifier::checkUpdate($this, $this->getDescription()->getName(), $this->getDescription()->getVersion(), 13940);
 
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
             $this->onTick();
@@ -44,9 +43,6 @@ class Main extends PluginBase {
         $this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
             $this->clearItems();
         }), $this->autoClearInterval * 20);
-        
-        // Check for updates on enable
-        $this->checkUpdates();
     }
 
     private function loadConfigValues(): void {
@@ -120,26 +116,6 @@ class Main extends PluginBase {
         if ($this->notifyPlayersEnable) {
             $this->getServer()->broadcastMessage(str_replace("{countdown}", (string)$this->timeRemaining, $this->notifyPlayersMessage));
         }
-    }
-
-    private function checkUpdates(): void {
-        $pluginName = "ClearLagg";
-        $resourceId = 13940;
-        
-        $this->getLogger()->info("Checking for updates...");
-        Internet::getURL("https://poggit.pmmp.io/releases.json?name=" . $pluginName, 10, [], function (string $response) use ($pluginName, $resourceId): void {
-            $data = json_decode($response, true);
-            if (isset($data[$pluginName])) {
-                $latestVersion = $data[$pluginName][0]["version"];
-                if (version_compare($this->getDescription()->getVersion(), $latestVersion, "<")) {
-                    $this->getLogger()->info("A new version ($latestVersion) is available! Update at: https://poggit.pmmp.io/r/$resourceId");
-                } else {
-                    $this->getLogger()->info("Plugin is up to date.");
-                }
-            } else {
-                $this->getLogger()->warning("Failed to check for updates: Data for $pluginName not found.");
-            }
-        });
     }
 
     public function onDisable(): void {
