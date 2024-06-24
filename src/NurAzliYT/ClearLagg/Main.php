@@ -41,7 +41,7 @@ class Main extends PluginBase {
         $this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
             $this->clearItems();
         }), $this->autoClearInterval * 20);
-
+        
         // Check for updates on enable
         $this->checkUpdates();
     }
