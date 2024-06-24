@@ -3,7 +3,6 @@
 namespace NurAzliYT\ClearLagg;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\event\Listener;
 use pocketmine\utils\TextFormat;
 use pocketmine\scheduler\Task;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
