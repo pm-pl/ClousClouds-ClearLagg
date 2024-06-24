@@ -9,7 +9,6 @@ use pocketmine\Server;
 use pocketmine\world\World;
 use pocketmine\entity\object\ItemEntity;
 use pocketmine\utils\TextFormat;
-use JackMD\UpdateNotifier\UpdateNotifier;
 
 class Main extends PluginBase {
 
@@ -28,8 +27,6 @@ class Main extends PluginBase {
 
     public function onEnable(): void {
         $this->loadConfigValues();
-
-        UpdateNotifier::checkUpdate($this, $this->getDescription()->getName(), $this->getDescription()->getVersion(), 13940);
 
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
             $this->onTick();
