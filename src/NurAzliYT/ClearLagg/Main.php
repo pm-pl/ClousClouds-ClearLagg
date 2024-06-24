@@ -5,8 +5,6 @@ namespace NurAzliYT\ClearLagg;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\utils\TextFormat;
-use pocketmine\scheduler\TaskScheduler;
-use pocketmine\player\Player;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\listener\EventListener;
 use NurAzliYT\ClearLagg\manager\ClearLaggManager;
@@ -35,7 +33,7 @@ class Main extends PluginBase implements Listener {
         $this->getServer()->getCommandMap()->register("clearlagg", new ClearLaggCommand($this));
 
         $interval = $this->getConfig()->get("auto-clear-interval", 300);
-        if(!is_int($interval) || $interval <= 0){
+        if (!is_int($interval) || $interval <= 0) {
             $this->getLogger()->warning("auto-clear-interval in config is invalid, using default value 300 seconds.");
             $interval = 300;
         }
@@ -77,7 +75,7 @@ class Main extends PluginBase implements Listener {
 
                 public function onRun(int $currentTick): void {
                     foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
-                        $player->sendMessage(TextFormat::RED . str_replace("{seconds}", $this->countdown, $this->message));
+                        $player->sendMessage(TextFormat::RED . str_replace("{seconds}", (string)$this->countdown, $this->message));
                     }
                 }
             }, 20 * $countdown);
