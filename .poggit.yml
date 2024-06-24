@@ -5,5 +5,8 @@ branches:
 projects: 
   ClearLagg:
     path: ""
+    libs:
+      - src: ifera-mc/UpdateNotifier/UpdateNotifier
+        version: ^3.0.0
     icon: "OIG1-removebg-preview.png"
 ...
