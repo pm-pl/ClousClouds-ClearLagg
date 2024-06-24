@@ -127,12 +127,7 @@ class Main extends PluginBase {
         $resourceId = 13940;
         
         $this->getLogger()->info("Checking for updates...");
-        Internet::getURL("https://poggit.pmmp.io/releases.json?name=" . $pluginName, 10, [], function (string $response, ?string $error = null) use ($pluginName, $resourceId): void {
-            if ($error !== null) {
-                $this->getLogger()->warning("Failed to check for updates: $error");
-                return;
-            }
-
+        Internet::getURL("https://poggit.pmmp.io/releases.json?name=" . $pluginName, 10, [], function (string $response) use ($pluginName, $resourceId): void {
             $data = json_decode($response, true);
             if (isset($data[$pluginName])) {
                 $latestVersion = $data[$pluginName][0]["version"];
