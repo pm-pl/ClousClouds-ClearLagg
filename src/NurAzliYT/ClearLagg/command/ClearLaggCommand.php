@@ -39,21 +39,22 @@ class ClearLaggCommand extends Command implements PluginOwned {
             return false;
         }
 
-        if (isset($args[0]) && $args[0] === "stats") {
-            $stats = $this->plugin->getStatsManager()->getStats();
-            $sender->sendMessage("Items cleared: " . $stats['total'] . "\nSince last restart: " . $stats['current']);
-            return true;
+        if (isset($args[0])) {
+            if ($args[0] === "stats") {
+                $stats = $this->plugin->getStatsManager()->getStats();
+                $sender->sendMessage("Items cleared: " . $stats['total'] . "\nSince last restart: " . $stats['current']);
+                return true;
+            } else {
+                // Inform user about invalid argument without showing usage message
+                $sender->sendMessage("Invalid command usage. Use /clearlagg or /clearlagg stats.");
+                return false;
+            }
         }
 
-        if (empty($args)) {
-            $this->plugin->getClearLaggManager()->clearLagg();
-            $sender->sendMessage("All dropped items have been cleared.");
-            return true;
-        }
-
-        // Jika ada argumen yang tidak dikenal, beritahu pengguna tanpa menunjukkan usage message
-        $sender->sendMessage("Invalid command usage. Use /clearlagg or /clearlagg stats.");
-        return false;
+        // If no arguments, execute the clear lag function
+        $this->plugin->getClearLaggManager()->clearLagg();
+        $sender->sendMessage("All dropped items have been cleared.");
+        return true;
     }
 
     /**
