@@ -2,9 +2,8 @@
 build-by-default: true
 branches:
 - main
-- 1.1.0
 projects: 
   ClearLagg:
     path: ""
-    icon: "https://i.ibb.co.com/gW2N2Hz/OIG1-removebg-preview.png"
+    icon: "OIG1-removebg-preview.png"
 ...
