@@ -12,7 +12,7 @@ use pocketmine\scheduler\TaskHandler;
 use pocketmine\Server;
 use NurAzliYT\ClearLagg\manager\ClearLaggManager;
 use NurAzliYT\ClearLagg\manager\StatsManager;
-use NurAzliYT\ClearLagg\command\ClearlaggCommand;
+use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
 
 class Main extends PluginBase {
