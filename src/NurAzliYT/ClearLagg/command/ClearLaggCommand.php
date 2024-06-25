@@ -8,7 +8,7 @@ use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use NurAzliYT\ClearLagg\Main;
 
-class ClearlaggCommand extends Command {
+class ClearLaggCommand extends Command {
 
     private $plugin;
 
