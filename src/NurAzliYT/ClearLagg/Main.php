@@ -17,7 +17,7 @@ use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
 
 class Main extends PluginBase {
 
-    private $clearLaggManager;
+    public ClearLaggManager $clearLaggManager;
     private $statsManager;
     private $clearTaskHandler;
     private $broadcastTaskHandler;
