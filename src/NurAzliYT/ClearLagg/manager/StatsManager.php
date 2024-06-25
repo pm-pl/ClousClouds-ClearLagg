@@ -6,7 +6,7 @@ use NurAzliYT\ClearLagg\Main;
 
 class StatsManager {
 
-    private $plugin;
+    public Main $plugin;
     private $itemsCleared;
 
     public function __construct(Main $plugin) {
