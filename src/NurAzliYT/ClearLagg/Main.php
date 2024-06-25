@@ -3,120 +3,91 @@
 namespace NurAzliYT\ClearLagg;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\scheduler\ClosureTask;
-use pocketmine\scheduler\TaskHandler;
-use pocketmine\Server;
-use pocketmine\world\World;
-use pocketmine\entity\object\ItemEntity;
-use pocketmine\utils\TextFormat;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+use pocketmine\utils\Config;
+use pocketmine\utils\Internet;
+use NurAzliYT\ClearLagg\manager\ClearLaggManager;
+use NurAzliYT\ClearLagg\manager\StatsManager;
+use NurAzliYT\ClearLagg\command\ClearLaggCommand;
+use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
 
 class Main extends PluginBase {
 
-    private $autoClearInterval;
-    private $worldSettings;
-    private $notifyPlayersEnable;
-    private $notifyPlayersMessage;
-    private $notifyPlayersCountdown;
-    private $timeRemaining;
-    private $clearTaskHandler;
-
-    public function onLoad(): void {
-        $this->saveDefaultConfig();
-        $this->reloadConfig();
-    }
+    private Config $config;
 
     public function onEnable(): void {
-        $this->loadConfigValues();
-
-        $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
-            $this->onTick();
-        }), 20);
-
-        $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
-            $this->broadcastTime();
-        }), $this->autoClearInterval * 20);
-
-        // Schedule ClearItemsTask
-        $this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
-            $this->clearItems();
-        }), $this->autoClearInterval * 20);
+        $this->saveDefaultConfig();
+        $this->config = $this->getConfig();
+        $this->getLogger()->info("ClearLagg plugin enabled!");
+        $this->registerCommands();
+        $this->startClearlagg();
+        $this->checkUpdates();
     }
 
-    private function loadConfigValues(): void {
-        $config = $this->getConfig();
-
-        $this->autoClearInterval = $config->get("auto-clear-interval", 300);
-        $this->worldSettings = $config->get("worlds", []);
-        $this->notifyPlayersEnable = $config->getNested("notify-players.enable", true);
-        $this->notifyPlayersMessage = $config->getNested("notify-players.message", "All dropped items will be cleared in {countdown} seconds!");
-        $this->notifyPlayersCountdown = $config->getNested("notify-players.countdown", 60);
-
-        $this->timeRemaining = $this->autoClearInterval;
+    private function registerCommands() {
+        $commandMap = $this->getServer()->getCommandMap();
+        $commandMap->register("clearlagg", new ClearLaggCommand($this));
+        $commandMap->register("clearlaggstats", new StatsCommand($this));
     }
 
-    public function getAutoClearInterval(): int {
-        return $this->autoClearInterval;
+    private function startClearlagg() {
+        $interval = $this->config->get("auto-clear-interval", 300);  // Default 300 detik (5 menit)
+        $this->getScheduler()->scheduleRepeatingTask(new ClearLaggManager($this), 20 * $interval);
     }
 
-    public function getWorldSettings(): array {
-        return $this->worldSettings;
+    public function getClearLaggConfig(): Config {
+        return $this->config;
     }
 
-    public function getNotifyPlayersEnable(): bool {
-        return $this->notifyPlayersEnable;
-    }
+    public function notifyPlayers(string $message, int $countdown) {
+        $task = new class($this, $message, $countdown) extends \pocketmine\scheduler\Task {
+            private Main $plugin;
+            private string $message;
+            private int $countdown;
 
-    public function getNotifyPlayersMessage(): string {
-        return $this->notifyPlayersMessage;
-    }
-
-    public function getNotifyPlayersCountdown(): int {
-        return $this->notifyPlayersCountdown;
-    }
-
-    public function getTimeRemaining(): int {
-        return $this->timeRemaining;
-    }
-
-    public function setTimeRemaining(int $timeRemaining): void {
-        $this->timeRemaining = $timeRemaining;
-    }
-
-    private function onTick(): void {
-        if ($this->timeRemaining <= 5 && $this->timeRemaining > 0 && $this->notifyPlayersEnable) {
-            $this->getServer()->broadcastMessage(str_replace("{countdown}", (string)$this->timeRemaining, $this->notifyPlayersMessage));
-        }
-
-        if ($this->timeRemaining <= 0) {
-            $this->clearItems();
-            $this->timeRemaining = $this->autoClearInterval;
-        } else {
-            $this->timeRemaining--;
-        }
-    }
-
-    private function clearItems(): void {
-        foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
-            $worldName = $world->getFolderName();
-            if (isset($this->worldSettings[$worldName]["enable-auto-clear"]) && $this->worldSettings[$worldName]["enable-auto-clear"] === true) {
-                foreach ($world->getEntities() as $entity) {
-                    if ($entity instanceof ItemEntity) {
-                        $entity->flagForDespawn();
-                    }
-                }
+            public function __construct(Main $plugin, string $message, int $countdown) {
+                $this->plugin = $plugin;
+                $this->message = $message;
+                $this->countdown = $countdown;
             }
-        }
-        $this->getServer()->broadcastMessage("§aGarbage collected correctly.");
+
+            public function onRun(): void {
+                $this->plugin->getServer()->broadcastMessage($this->message . " in " . $this->countdown . " seconds!");
+                if ($this->countdown <= 0) {
+                    $this->plugin->getScheduler()->cancelTask($this->getTaskId());
+                }
+                $this->countdown -= 10;
+            }
+        };
+        $this->getScheduler()->scheduleRepeatingTask($task, 20 * 10);
     }
 
-    private function broadcastTime(): void {
-        if ($this->notifyPlayersEnable) {
-            $this->getServer()->broadcastMessage(str_replace("{countdown}", (string)$this->timeRemaining, $this->notifyPlayersMessage));
-        }
+    private function checkUpdates() {
+        $pluginName = $this->getDescription()->getName();
+        $url = "https://poggit.pmmp.io/releases.json?name=$pluginName";
+        
+        Internet::getURL($url, function($code, $result) use ($pluginName) {
+            if ($code === 200) {
+                $data = json_decode($result, true);
+                if (isset($data[$pluginName][0])) {
+                    $latestVersion = $data[$pluginName][0]["version"];
+                    if (version_compare($this->getDescription()->getVersion(), $latestVersion, "<")) {
+                        $this->getLogger()->info("A new version ($latestVersion) is available! Update at: https://poggit.pmmp.io/r/{$data[$pluginName][0]['id']}");
+                    } else {
+                        $this->getLogger()->info("Plugin is up to date.");
+                    }
+                } else {
+                    $this->getLogger()->warning("Failed to check for updates: Data for $pluginName not found.");
+                }
+            } else {
+                $this->getLogger()->warning("Failed to check for updates: HTTP status code $code.");
+            }
+        });
     }
 
     public function onDisable(): void {
-        if ($this->clearTaskHandler instanceof TaskHandler) {
+        if (isset($this->clearTaskHandler)) {
             $this->clearTaskHandler->cancel();
         }
     }
