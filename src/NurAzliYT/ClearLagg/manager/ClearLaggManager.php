@@ -1,6 +1,6 @@
 <?php
 
-namespace NurAzliYT\ClearLagg;
+namespace NurAzliYT\ClearLagg\manager;
 
 use pocketmine\Server;
 use pocketmine\entity\object\ItemEntity;
