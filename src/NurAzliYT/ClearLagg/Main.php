@@ -6,7 +6,10 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\Config;
-use pocketmine\utils\Internet;
+use pocketmine\utils\TextFormat;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\TaskHandler;
+use pocketmine\Server;
 use NurAzliYT\ClearLagg\manager\ClearLaggManager;
 use NurAzliYT\ClearLagg\manager\StatsManager;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
@@ -14,81 +17,77 @@ use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
 
 class Main extends PluginBase {
 
-    private Config $config;
+    private $clearLaggManager;
+    private $statsManager;
+    private $clearTaskHandler;
+    private $broadcastTaskHandler;
+    private $timeRemaining;
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
-        $this->config = $this->getConfig();
-        $this->getLogger()->info("ClearLagg plugin enabled!");
-        $this->registerCommands();
-        $this->startClearlagg();
-        $this->checkUpdates();
-    }
+        $this->clearLaggManager = new ClearLaggManager($this);
+        $this->statsManager = new StatsManager($this);
 
-    private function registerCommands() {
-        $commandMap = $this->getServer()->getCommandMap();
-        $commandMap->register("clearlagg", new ClearLaggCommand($this));
-        $commandMap->register("clearlaggstats", new StatsCommand($this));
-    }
+        $this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
 
-    private function startClearlagg() {
-        $interval = $this->config->get("auto-clear-interval", 300);  // Default 300 detik (5 menit)
-        $this->getScheduler()->scheduleRepeatingTask(new ClearLaggManager($this), 20 * $interval);
-    }
+        $this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
+            $this->onTick();
+        }), 20);
 
-    public function getClearLaggConfig(): Config {
-        return $this->config;
-    }
+        $broadcastInterval = $this->getConfig()->get("broadcast-interval", 15);
+        $this->broadcastTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
+            $this->broadcastTime();
+        }), $broadcastInterval * 20);
 
-    public function notifyPlayers(string $message, int $countdown) {
-        $task = new class($this, $message, $countdown) extends \pocketmine\scheduler\Task {
-            private Main $plugin;
-            private string $message;
-            private int $countdown;
-
-            public function __construct(Main $plugin, string $message, int $countdown) {
-                $this->plugin = $plugin;
-                $this->message = $message;
-                $this->countdown = $countdown;
-            }
-
-            public function onRun(): void {
-                $this->plugin->getServer()->broadcastMessage($this->message . " in " . $this->countdown . " seconds!");
-                if ($this->countdown <= 0) {
-                    $this->plugin->getScheduler()->cancelTask($this->getTaskId());
-                }
-                $this->countdown -= 10;
-            }
-        };
-        $this->getScheduler()->scheduleRepeatingTask($task, 20 * 10);
-    }
-
-    private function checkUpdates() {
-        $pluginName = $this->getDescription()->getName();
-        $url = "https://poggit.pmmp.io/releases.json?name=$pluginName";
-        
-        Internet::getURL($url, function($code, $result) use ($pluginName) {
-            if ($code === 200) {
-                $data = json_decode($result, true);
-                if (isset($data[$pluginName][0])) {
-                    $latestVersion = $data[$pluginName][0]["version"];
-                    if (version_compare($this->getDescription()->getVersion(), $latestVersion, "<")) {
-                        $this->getLogger()->info("A new version ($latestVersion) is available! Update at: https://poggit.pmmp.io/r/{$data[$pluginName][0]['id']}");
-                    } else {
-                        $this->getLogger()->info("Plugin is up to date.");
-                    }
-                } else {
-                    $this->getLogger()->warning("Failed to check for updates: Data for $pluginName not found.");
-                }
-            } else {
-                $this->getLogger()->warning("Failed to check for updates: HTTP status code $code.");
-            }
-        });
+        $this->getLogger()->info(TextFormat::GREEN . "ClearLagg enabled!");
     }
 
     public function onDisable(): void {
-        if (isset($this->clearTaskHandler)) {
+        if ($this->clearTaskHandler instanceof TaskHandler) {
             $this->clearTaskHandler->cancel();
         }
+        if ($this->broadcastTaskHandler instanceof TaskHandler) {
+            $this->broadcastTaskHandler->cancel();
+        }
+        $this->getLogger()->info(TextFormat::RED . "ClearLagg disabled!");
+    }
+
+    public function getClearLaggManager(): ClearLaggManager {
+        return $this->clearLaggManager;
+    }
+
+    public function getStatsManager(): StatsManager {
+        return $this->statsManager;
+    }
+
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
+        if (strtolower($command->getName()) === "clearlagg") {
+            if (count($args) > 0 && strtolower($args[0]) === "stats") {
+                (new StatsCommand($this))->execute($sender);
+            } else {
+                $this->clearLaggManager->clearItems();
+                $sender->sendMessage(TextFormat::GREEN . "Items cleared!");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private function onTick(): void {
+        if ($this->timeRemaining <= 5 && $this->timeRemaining > 0) {
+            $this->getServer()->broadcastMessage($this->clearLaggManager->getWarningMessage($this->timeRemaining));
+        }
+
+        if ($this->timeRemaining <= 0) {
+            $this->clearLaggManager->clearItems();
+            $this->statsManager->incrementItemsCleared();
+            $this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
+        } else {
+            $this->timeRemaining--;
+        }
+    }
+
+    private function broadcastTime(): void {
+        $this->getServer()->broadcastMessage(str_replace("{time}", (string)$this->timeRemaining, $this->getConfig()->get("broadcast-message", "§bThe items will be deleted in {time} seconds.")));
     }
 }
