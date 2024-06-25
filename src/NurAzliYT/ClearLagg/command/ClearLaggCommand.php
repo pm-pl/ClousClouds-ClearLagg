@@ -7,9 +7,10 @@ use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use NurAzliYT\ClearLagg\Main;
+use NurAzliYT\ClearLagg\NurAzliYT;
 
 class ClearLaggCommand extends Command {
-
+    /** @var Main $plugin */
     private $plugin;
 
     public function __construct(Main $plugin) {
