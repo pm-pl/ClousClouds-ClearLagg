@@ -2,6 +2,7 @@
 
 namespace NurAzliYT\ClearLagg\manager;
 
+use NurAzliYT\ClearLagg\Main;
 use pocketmine\Server;
 use pocketmine\entity\object\ItemEntity;
 use pocketmine\utils\TextFormat;
