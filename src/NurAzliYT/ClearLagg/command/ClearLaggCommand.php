@@ -9,7 +9,7 @@ use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\utils\TextFormat;
 use NurAzliYT\ClearLagg\Main;
 
-class ClearlaggCommand extends Command implements PluginOwned {
+class ClearLaggCommand extends Command implements PluginOwned {
 
     use PluginOwnedTrait;
 
