@@ -4,12 +4,17 @@ namespace NurAzliYT\ClearLagg\command;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\plugin\PluginOwned;
+use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use NurAzliYT\ClearLagg\Main;
 use NurAzliYT\ClearLagg\NurAzliYT;
 
-class ClearLaggCommand extends Command {
+class ClearLaggCommand extends Command implements PluginOwnedTrait {
+
+    use PluginOwnedTrait;
+    
     /** @var Main $plugin */
     private $plugin;
 
@@ -31,5 +36,9 @@ class ClearLaggCommand extends Command {
             $sender->sendMessage(TextFormat::GREEN . "Items cleared!");
         }
         return true;
+    }
+
+    public function getOwningPlugin(): Main {
+        return $this->plugin;
     }
 }
