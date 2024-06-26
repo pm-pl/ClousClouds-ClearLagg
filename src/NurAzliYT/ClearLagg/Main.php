@@ -10,8 +10,10 @@ use pocketmine\utils\TextFormat;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
 use pocketmine\Server;
-use NurAzliYT\manager\ClearLaggManager;
-use NurAzliYT\manager\StatsManager;
+use NurAzliYT\ClearLagg\manager\ClearLaggManager;
+use NurAzliYT\ClearLagg\manager\StatsManager;
+use NurAzliYT\ClearLagg\command\ClearLaggCommand;
+use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
 
 class Main extends PluginBase {
 
