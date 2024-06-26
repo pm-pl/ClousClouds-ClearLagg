@@ -47,7 +47,6 @@ class Main extends PluginBase {
         if ($this->broadcastTaskHandler instanceof TaskHandler) {
             $this->broadcastTaskHandler->cancel();
         }
-        $this->getLogger()->info(TextFormat::RED . "ClearLagg disabled!");
     }
 
     public function getClearLaggManager(): ClearLaggManager {
