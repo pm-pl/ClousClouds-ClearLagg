@@ -10,6 +10,8 @@ use pocketmine\utils\TextFormat;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
 use pocketmine\Server;
+use NurAzliYT\manager\ClearLaggManager;
+use NurAzliYT\manager\StatsManager;
 
 class Main extends PluginBase {
 
