@@ -38,8 +38,6 @@ class Main extends PluginBase {
         $this->broadcastTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
             $this->broadcastTime();
         }), $broadcastInterval * 20);
-
-        $this->getLogger()->info(TextFormat::GREEN . "ClearLagg enabled!");
     }
 
     public function onDisable(): void {
