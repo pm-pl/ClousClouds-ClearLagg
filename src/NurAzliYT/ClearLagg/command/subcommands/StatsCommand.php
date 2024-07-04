@@ -1,6 +1,6 @@
 <?php
 
-namespace NurAzliYT\ClearLagg;
+namespace NurAzliYT\ClearLagg\command\subcommands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
