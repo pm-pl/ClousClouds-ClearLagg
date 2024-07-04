@@ -6,19 +6,16 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
-use pocketmine\utils\TextFormat;
-use NurAzliYT\ClearLagg\Main;
 
 class ClearLaggCommand extends Command implements PluginOwned {
-
     use PluginOwnedTrait;
 
     private $plugin;
 
     public function __construct(Main $plugin) {
-        parent::__construct("clearlagg", "Clears dropped items", "/clearlagg [stats]", ["cl"]);
-        $this->setPermission("clearlagg.command");
+        parent::__construct("clearlagg", "Clear lag by removing items", "/clearlagg [stats]", ["cl"]);
         $this->plugin = $plugin;
+        $this->setPermission("clearlagg.command");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
@@ -26,12 +23,14 @@ class ClearLaggCommand extends Command implements PluginOwned {
             return false;
         }
 
-        if (count($args) > 0 && strtolower($args[0]) === "stats") {
-            $sender->sendMessage(TextFormat::GREEN . "Total items cleared: " . $this->plugin->getStatsManager()->getItemsCleared());
+        if (isset($args[0]) && $args[0] === "stats") {
+            $statsCommand = new StatsCommand($this->plugin);
+            return $statsCommand->execute($sender, $commandLabel, $args);
         } else {
             $this->plugin->getClearLaggManager()->clearItems();
-            $sender->sendMessage(TextFormat::GREEN . "Items cleared!");
+            $sender->sendMessage("Items cleared.");
         }
+
         return true;
     }
 
