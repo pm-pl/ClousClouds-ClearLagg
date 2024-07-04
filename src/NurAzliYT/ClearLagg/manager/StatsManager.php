@@ -1,25 +1,28 @@
 <?php
 
-namespace NurAzliYT\ClearLagg\manager;
+namespace NurAzliYT\ClearLagg\mamager;
 
+use pocketmine\command\CommandSender;
+use pocketmine\utils\TextFormat;
 use NurAzliYT\ClearLagg\Main;
 
 class StatsManager {
 
-    public Main $plugin;
-    private $itemsCleared;
+    private $plugin;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
-        $this->itemsCleared = 0;
     }
 
-    public function incrementItemsCleared(int $count = 1): void {
-        $this->itemsCleared += $count;
-    }
+    public function sendStats(CommandSender $sender): void {
+        $worldCount = count($this->plugin->getServer()->getWorldManager()->getWorlds());
+        $entityCount = 0;
+        foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
+            $entityCount += count($world->getEntities());
+        }
 
-    public function getItemsCleared(): int {
-        return $this->itemsCleared;
+        $sender->sendMessage(TextFormat::YELLOW . "Server Stats:");
+        $sender->sendMessage(TextFormat::GOLD . "Worlds: " . TextFormat::WHITE . $worldCount);
+        $sender->sendMessage(TextFormat::GOLD . "Entities: " . TextFormat::WHITE . $entityCount);
     }
 }
-
