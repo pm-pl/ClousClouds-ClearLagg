@@ -7,6 +7,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
 use NurAzliYT\ClearLagg\Main;
+use NurAzliYT\ClearLagg\command\StatsCommand;
 
 class ClearLaggCommand extends Command implements PluginOwned {
     use PluginOwnedTrait;
