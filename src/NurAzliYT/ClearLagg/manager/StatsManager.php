@@ -1,6 +1,6 @@
 <?php
 
-namespace NurAzliYT\ClearLagg\mamager;
+namespace NurAzliYT\ClearLagg\manager;
 
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
