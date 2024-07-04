@@ -8,7 +8,7 @@ description: A plugin to reduce lag by clearing dropped items.
 commands:
   clearlagg:
     description: Clears all dropped items.
-    permission: clearlagg.use
+    permission: clearlagg.command
 permissions:
   clearlagg.command:
     default: op
