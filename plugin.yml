@@ -1,6 +1,6 @@
 name: ClearLagg
 main: NurAzliYT\ClearLagg\Main
-version: 1.1.0
+version: 1.2.0
 api: 5.0.0
 website: https://xpocketmcplugins.web.app
 author: [NurAzliYT, XPocketMC, NurAzli]
@@ -10,9 +10,9 @@ commands:
     description: Clears all dropped items.
     permission: clearlagg.use
 permissions:
-  clearlagg.use:
-    default: true
+  clearlagg.command:
+    default: op
     description: Allows the player to use the clearlagg command.
   clearlagg.stats:
-    default: true
+    default: op
     description: Allows the player to view clearlagg statistics.
