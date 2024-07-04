@@ -5,6 +5,7 @@ namespace NurAzliYT\ClearLagg\manager;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use pocketmine\entity\object\ItemEntity;
+use NurAzliYT\ClearLagg\Main;
 
 class ClearLaggManager {
 
