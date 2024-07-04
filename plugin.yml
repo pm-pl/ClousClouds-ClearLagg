@@ -13,6 +13,6 @@ permissions:
   clearlagg.command:
     default: op
     description: Allows the player to use the clearlagg command.
-  clearlagg.stats:
+  clearlagg.stats.command:
     default: op
     description: Allows the player to view clearlagg statistics.
