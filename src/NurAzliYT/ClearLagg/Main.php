@@ -12,6 +12,7 @@ use NurAzliYT\ClearLagg\manager\StatsManager;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
 
+// TEST
 class Main extends PluginBase {
 
     private $clearLaggManager;
