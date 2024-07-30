@@ -11,14 +11,18 @@ use NurAzliYT\ClearLagg\manager\ClearLaggManager;
 use NurAzliYT\ClearLagg\manager\StatsManager;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
+use NurAzliYT\UpdateNotifications\UpdateNotifications;
 
-// TEST
 class Main extends PluginBase {
 
     private $clearLaggManager;
     private $statsManager;
 
     public function onEnable(): void {
+        $currentVersion = $this->getDescription()->getVersion();
+        $pluginName = $this->getDescription()->getName();
+
+        new UpdateNotifications($this, $currentVersion, $pluginName);
         $this->saveDefaultConfig();
         $this->clearLaggManager = new ClearLaggManager($this);
         $this->statsManager = new StatsManager($this);
