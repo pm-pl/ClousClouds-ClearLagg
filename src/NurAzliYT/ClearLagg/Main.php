@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Plugin Created By NurAzliYT
+ * License LGPL-4
+ */
+
 namespace NurAzliYT\ClearLagg;
 
 use pocketmine\plugin\PluginBase;
