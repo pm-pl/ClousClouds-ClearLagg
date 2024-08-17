@@ -32,10 +32,6 @@ class Main extends PluginBase {
     private $entityCap;
 
     public function onEnable(): void {
-        $currentVersion = $this->getDescription()->getVersion();
-        $pluginName = $this->getDescription()->getName();
-
-        new UpdateNotifications($this, $currentVersion, $pluginName);
         $this->saveDefaultConfig();
         ConfigNotifier::checkConfigVersion($this);
         UpdateNotifier::checkForUpdates($this);
