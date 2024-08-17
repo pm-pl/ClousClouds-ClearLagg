@@ -24,12 +24,12 @@ use NurAzliYT\ClearLagg\manager\ClearLaggManager;
 use NurAzliYT\ClearLagg\manager\StatsManager;
 use NurAzliYT\ClearLagg\command\ClearLaggCommand;
 use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
-use NurAzliYT\UpdateNotifications\UpdateNotifications;
 
 class Main extends PluginBase {
 
     private $clearLaggManager;
     private $statsManager;
+    private $entityCap;
 
     public function onEnable(): void {
         $currentVersion = $this->getDescription()->getVersion();
@@ -37,12 +37,35 @@ class Main extends PluginBase {
 
         new UpdateNotifications($this, $currentVersion, $pluginName);
         $this->saveDefaultConfig();
+        ConfigNotifier::checkConfigVersion($this);
+        UpdateNotifier::checkForUpdates($this);
         $this->clearLaggManager = new ClearLaggManager($this);
         $this->statsManager = new StatsManager($this);
 
         $this->clearLaggManager->init();
 
         $this->registerCommands();
+        $this->entityCap = $this->getConfig()-get(entity-cap", []);
+    }
+
+    private function clearItems(): void {
+        foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
+           $worldName = $world->getFolderName();
+           if (isset($this->entityCap[$worldName])) {
+                $entityCount = [];
+                foreach ($world->getEntities() as $entity) {
+                    $entityId = $entity->getName();
+                    if (!isset($entityCount[$entityId])) {
+                        $entityCount[$entityId] = 0;
+                    }
+                    $entityCount[$entityId]++;
+                    if ($entityCount[$entityId] > $this->entityCap[$worldName][$entityId]) {
+                        $entity->flagForDespawn();
+                    }
+                }
+            }
+        }
+       $this->getServer()->broadcastMessage($this->clearMessage);
     }
 
     private function registerCommands(): void {
