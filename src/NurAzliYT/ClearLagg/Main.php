@@ -41,7 +41,7 @@ class Main extends PluginBase {
         $this->clearLaggManager->init();
 
         $this->registerCommands();
-        $this->entityCap = $this->getConfig()-get(entity-cap", []);
+        $this->entityCap = $this->getConfig()-get(entity-cap, []);
     }
 
     private function clearItems(): void {
