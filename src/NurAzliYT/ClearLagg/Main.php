@@ -15,6 +15,7 @@
 
 namespace NurAzliYT\ClearLagg;
 
+use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
