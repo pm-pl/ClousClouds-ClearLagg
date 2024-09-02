@@ -1,80 +1,52 @@
 <?php
 
-/**
- * Plugin Created By KnosTx https://github.com/KnosTx
- *    ____ _                 _                      
- *  / ___| | ___  __ _ _ __| |    __ _  __ _  __ _ 
- * | |   | |/ _ \/ _` | '__| |   / _` |/ _` |/ _` |
- * | |___| |  __/ (_| | |  | |__| (_| | (_| | (_| |
- *  \____|_|\___|\__,_|_|  |_____\__,_|\__, |\__, |
- *                                     |___/ |___/ 
- * License LGPL-4
- * KnosTx Team
- * https://xpocketmc.xyz
- */
+namespace NurAzliYT\ClearLagg;
 
-namespace KnosTx\ClearLagg;
-
-use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginCommand;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
-use KnosTx\ClearLagg\manager\ClearLaggManager;
-use KnosTx\ClearLagg\manager\StatsManager;
-use KnosTx\ClearLagg\command\ClearLaggCommand;
-use KnosTx\ClearLagg\command\subcommands\StatsCommand;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\TaskHandler;
+use pocketmine\Server;
+use NurAzliYT\ClearLagg\manager\ClearLaggManager;
+use NurAzliYT\ClearLagg\manager\StatsManager;
+use NurAzliYT\ClearLagg\command\ClearLaggCommand;
+use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
 
 class Main extends PluginBase {
 
     private $clearLaggManager;
     private $statsManager;
-    private $entityCap;
+    private $clearTaskHandler;
+    private $broadcastTaskHandler;
+    private $timeRemaining;
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
-        ConfigNotifier::checkConfigVersion($this);
-        UpdateNotifier::checkForUpdates($this);
         $this->clearLaggManager = new ClearLaggManager($this);
         $this->statsManager = new StatsManager($this);
 
-        $this->clearLaggManager->init();
+        $this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
 
-        $this->registerCommands();
-        $this->entityCap = $this->getConfig()-get(entity-cap, []);
-    }
+        $this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
+            $this->onTick();
+        }), 20);
 
-    private function clearItems(): void {
-        foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world) {
-           $worldName = $world->getFolderName();
-           if (isset($this->entityCap[$worldName])) {
-                $entityCount = [];
-                foreach ($world->getEntities() as $entity) {
-                    $entityId = $entity->getName();
-                    if (!isset($entityCount[$entityId])) {
-                        $entityCount[$entityId] = 0;
-                    }
-                    $entityCount[$entityId]++;
-                    if ($entityCount[$entityId] > $this->entityCap[$worldName][$entityId]) {
-                        $entity->flagForDespawn();
-                    }
-                }
-            }
-        }
-       $this->getServer()->broadcastMessage($this->clearMessage);
-    }
-
-    private function registerCommands(): void {
-        $clearLaggCommand = new ClearLaggCommand($this);
-        $this->getServer()->getCommandMap()->register("clearlagg", $clearLaggCommand);
-
-        $statsCommand = new StatsCommand($this);
-        $this->getServer()->getCommandMap()->register("clearlaggstats", $statsCommand);
+        $broadcastInterval = $this->getConfig()->get("broadcast-interval", 15);
+        $this->broadcastTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
+            $this->broadcastTime();
+        }), $broadcastInterval * 20);
     }
 
     public function onDisable(): void {
-        $this->clearLaggManager->shutdown();
+        if ($this->clearTaskHandler instanceof TaskHandler) {
+            $this->clearTaskHandler->cancel();
+        }
+        if ($this->broadcastTaskHandler instanceof TaskHandler) {
+            $this->broadcastTaskHandler->cancel();
+        }
     }
 
     public function getClearLaggManager(): ClearLaggManager {
@@ -83,5 +55,36 @@ class Main extends PluginBase {
 
     public function getStatsManager(): StatsManager {
         return $this->statsManager;
+    }
+
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
+        if (strtolower($command->getName()) === "clearlagg") {
+            if (count($args) > 0 && strtolower($args[0]) === "stats") {
+                (new StatsCommand($this))->execute($sender);
+            } else {
+                $this->clearLaggManager->clearItems();
+                $sender->sendMessage(TextFormat::GREEN . "Items cleared!");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private function onTick(): void {
+        if ($this->timeRemaining <= 5 && $this->timeRemaining > 0) {
+            $this->getServer()->broadcastMessage($this->clearLaggManager->getWarningMessage($this->timeRemaining));
+        }
+
+        if ($this->timeRemaining <= 0) {
+            $this->clearLaggManager->clearItems();
+            $this->statsManager->incrementItemsCleared();
+            $this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
+        } else {
+            $this->timeRemaining--;
+        }
+    }
+
+    private function broadcastTime(): void {
+        $this->getServer()->broadcastMessage(str_replace("{time}", (string)$this->timeRemaining, $this->getConfig()->get("broadcast-message", "§bThe items will be deleted in {time} seconds.")));
     }
 }
