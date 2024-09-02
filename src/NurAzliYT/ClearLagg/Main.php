@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Created By NurAzliYT https://github.com/NurAzliYT
+ * Plugin Created By KnosTx https://github.com/KnosTx
  *    ____ _                 _                      
  *  / ___| | ___  __ _ _ __| |    __ _  __ _  __ _ 
  * | |   | |/ _ \/ _` | '__| |   / _` |/ _` |/ _` |
@@ -9,11 +9,11 @@
  *  \____|_|\___|\__,_|_|  |_____\__,_|\__, |\__, |
  *                                     |___/ |___/ 
  * License LGPL-4
- * NurAzliYT Team
+ * KnosTx Team
  * https://xpocketmc.xyz
  */
 
-namespace NurAzliYT\ClearLagg;
+namespace KnosTx\ClearLagg;
 
 use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
@@ -21,10 +21,10 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\utils\TextFormat;
-use NurAzliYT\ClearLagg\manager\ClearLaggManager;
-use NurAzliYT\ClearLagg\manager\StatsManager;
-use NurAzliYT\ClearLagg\command\ClearLaggCommand;
-use NurAzliYT\ClearLagg\command\subcommands\StatsCommand;
+use KnosTx\ClearLagg\manager\ClearLaggManager;
+use KnosTx\ClearLagg\manager\StatsManager;
+use KnosTx\ClearLagg\command\ClearLaggCommand;
+use KnosTx\ClearLagg\command\subcommands\StatsCommand;
 
 class Main extends PluginBase {
 
