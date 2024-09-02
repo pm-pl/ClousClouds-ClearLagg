@@ -1,9 +1,9 @@
 name: ClearLagg
-main: NurAzliYT\ClearLagg\Main
+main: KnosTx\ClearLagg\Main
 version: 1.2.0
 api: 5.0.0
 website: https://xpocketmcplugins.web.app
-author: [NurAzliYT, XPocketMC, NurAzli]
+author: [KnosTx, XPocketMC, NurAzli]
 description: A plugin to reduce lag by clearing dropped items.
 commands:
   clearlagg:
