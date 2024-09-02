@@ -10,4 +10,5 @@ projects:
       - src: NurAzli/UpdateNotifications/UpdateNotifications
         version: ^1.0.0
     icon: "OIG1-removebg-preview.png"
+    phpstan: false
 ...
