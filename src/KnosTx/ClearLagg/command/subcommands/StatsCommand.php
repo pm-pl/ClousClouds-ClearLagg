@@ -1,12 +1,12 @@
 <?php
 
-namespace NurAzliYT\ClearLagg\command\subcommands;
+namespace KnosTx\ClearLagg\command\subcommands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
-use NurAzliYT\ClearLagg\Main;
+use KnosTx\ClearLagg\Main;
 
 class StatsCommand extends Command implements PluginOwned {
     use PluginOwnedTrait;
