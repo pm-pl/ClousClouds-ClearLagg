@@ -1,10 +1,10 @@
 <?php
 
-namespace NurAzliYT\ClearLagg\manager;
+namespace KnosTx\ClearLagg\manager;
 
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
-use NurAzliYT\ClearLagg\Main;
+use KnosTx\ClearLagg\Main;
 
 class StatsManager {
 
