@@ -1,11 +1,11 @@
 <?php
 
-namespace NurAzliYT\ClearLagg\manager;
+namespace KnosTx\ClearLagg\manager;
 
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use pocketmine\entity\object\ItemEntity;
-use NurAzliYT\ClearLagg\Main;
+use KnosTx\ClearLagg\Main;
 
 class ClearLaggManager {
 
