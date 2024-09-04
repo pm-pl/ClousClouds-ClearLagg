@@ -2,6 +2,7 @@
 build-by-default: true
 branches:
 - stable
+- 1.1.0
 - main
 projects: 
   ClearLagg:
@@ -10,6 +11,4 @@ projects:
       - src: NurAzli/UpdateNotifications/UpdateNotifications
         version: ^1.0.0
     icon: "OIG1-removebg-preview.png"
-    lint:
-      phpstan: false
 ...
