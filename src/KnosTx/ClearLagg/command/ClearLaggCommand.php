@@ -14,13 +14,13 @@ class ClearLaggCommand extends Command implements PluginOwned {
 
     private $plugin;
 
-    public function __construct(Main $plugin) {
+    public function __construct(Main $plugin): void {
         parent::__construct("clearlagg", "Clear lag by removing items", "/clearlagg [stats]", ["cl"]);
         $this->plugin = $plugin;
         $this->setPermission("clearlagg.command");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args): void {
+    public function execute(CommandSender $sender, string $commandLabel, array $args): bool{
         if (!$this->testPermission($sender)) {
             return false;
         }
