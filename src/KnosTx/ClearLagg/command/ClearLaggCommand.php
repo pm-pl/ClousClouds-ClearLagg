@@ -20,14 +20,14 @@ class ClearLaggCommand extends Command implements PluginOwned {
         $this->setPermission("clearlagg.command");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args): bool{
+    public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
         if (!$this->testPermission($sender)) {
             return false;
         }
 
         if (isset($args[0]) && $args[0] === "stats") {
             $statsCommand = new StatsCommand($this->plugin);
-            return $statsCommand->execute($sender, $commandLabel, $args);
+            return $statsCommand->execute($sender);
         } else {
             $this->plugin->getClearLaggManager()->clearItems();
             $sender->sendMessage("Items cleared.");
