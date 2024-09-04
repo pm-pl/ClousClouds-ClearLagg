@@ -20,7 +20,7 @@ class ClearLaggCommand extends Command implements PluginOwned {
         $this->setPermission("clearlagg.command");
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         if (!$this->testPermission($sender)) {
             return false;
         }
