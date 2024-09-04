@@ -14,7 +14,7 @@ class ClearLaggCommand extends Command implements PluginOwned {
 
     private $plugin;
 
-    public function __construct(Main $plugin): void {
+    public function __construct(Main $plugin) {
         parent::__construct("clearlagg", "Clear lag by removing items", "/clearlagg [stats]", ["cl"]);
         $this->plugin = $plugin;
         $this->setPermission("clearlagg.command");
