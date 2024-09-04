@@ -17,5 +17,7 @@ class StatsCommand {
     public function execute(CommandSender $sender): bool {
         $itemsCleared = $this->plugin->getStatsManager()->getItemsCleared();
         $sender->sendMessage(TextFormat::GREEN . "Total items cleared: " . $itemsCleared);
+
+        return true;
     }
 }
