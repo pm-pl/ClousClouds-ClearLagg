@@ -15,8 +15,20 @@ class StatsCommand {
     }
 
     public function execute(CommandSender $sender): bool {
-        $itemsCleared = $this->plugin->getStatsManager()->getItemsCleared();
-        $sender->sendMessage(TextFormat::GREEN . "Total items cleared: " . $itemsCleared);
+        try {
+            $statsManager = $this->plugin->getStatsManager();
+            if ($statsManager === null) {
+                $sender->sendMessage(TextFormat::RED . "Stats manager is not initialized.");
+                return false;
+            }
+
+            $itemsCleared = $statsManager->getItemsCleared();
+            $sender->sendMessage(TextFormat::GREEN . "Total items cleared: " . TextFormat::YELLOW . $itemsCleared);
+        } catch (\Exception $e) {
+            $sender->sendMessage(TextFormat::RED . "An error occurred: " . $e->getMessage());
+            $this->plugin->getLogger()->error("Error in StatsCommand: " . $e->getMessage(), $e);
+            return false;
+        }
 
         return true;
     }
