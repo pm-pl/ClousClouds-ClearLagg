@@ -55,8 +55,8 @@ notify-players:
 
 # Messages
 clear-message: "§aGarbage collected correctly."
-warning-message: "§cPicking up trash in {time}..."
-broadcast-message: "§bThe items will be deleted in {time} seconds."
+warning-message: "§cPicking up trash in{time}..."
+broadcast-message: "§bThe items will be deleted in{time} seconds."
 ```
 
 ## Commands

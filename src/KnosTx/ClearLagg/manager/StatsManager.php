@@ -24,18 +24,18 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 use function count;
 
-class StatsManager {
+class StatsManager{
 
 	private $plugin;
 
-	public function __construct(Main $plugin) {
+	public function __construct(Main $plugin){
 		$this->plugin = $plugin;
 	}
 
-	public function sendStats(CommandSender $sender) : void {
+	public function sendStats(CommandSender $sender) : void{
 		$worldCount = count($this->plugin->getServer()->getWorldManager()->getWorlds());
 		$entityCount = 0;
-		foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
+		foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world){
 			$entityCount += count($world->getEntities());
 		}
 
