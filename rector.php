@@ -1,16 +1,11 @@
 <?php
 
-use PHPStan\Type\ArrayType;
-use PHPStan\Type\MixedType;
 use Rector\Config\RectorConfig;
-use Rector\TypeDeclaration\Rector\ClassMethod\AddReturnTypeDeclarationRector;
+use Rector\Set\ValueObject\SetList;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
+return RectorConfig::configure()
+    ->withPaths([
         __DIR__ . '/src',
-    ]);
-
-    $rectorConfig->ruleWithConfiguration(AddReturnTypeDeclarationRector::class, [
-        new ArrayType(new MixedType(), new MixedType()),
-    ]);
-};
+    ])
+    ->withPreparedSets(deadCode: true);
+I
