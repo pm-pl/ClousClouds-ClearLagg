@@ -102,6 +102,9 @@ BODY,
         'return_type_declaration' => [
             'space_before' => 'one'
         ],
+        'phpdoc_no_empty_return' => true,
+        'phpdoc_types_order' => ['null_adjustment' => 'always_last'],
+        'phpdoc_var_annotation_correct_order' => true,
         'single_blank_line_at_eof' => true,
         'single_import_per_statement' => true,
         'strict_param' => true,
