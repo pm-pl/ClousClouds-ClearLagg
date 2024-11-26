@@ -30,12 +30,6 @@ jobs:
       run: |
         php-cs-fixer fix --allow-risky=yes --quiet  # Perbaiki kode tanpa output yang terlalu banyak
 
-    - name: Install Rector
-      run: composer require rector/rector --dev
-
-    - name: Run Rector
-      run: vendor/bin/rector process src
-    
     # Commit dan push perubahan jika ada
     - name: Commit and push changes
       run: |
