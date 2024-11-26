@@ -1,6 +1,6 @@
 # ClearLagg configuration file
 
-# Please Don't Edit configuration ver
+# Please Don't Edit configuration version
 config-version: 3
 
 # Time in seconds between automatic clears
@@ -13,10 +13,10 @@ broadcast-interval: 15
 worlds:
   world:
     enable-auto-clear: true
-  world_nether:
-    enable-auto-clear: true
-  world_the_end:
-    enable-auto-clear: true
+#  world_nether:
+#    enable-auto-clear: true
+#  world_the_end:
+#    enable-auto-clear: true
 
 # Player notifications
 notify-players:
