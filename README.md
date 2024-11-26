@@ -93,11 +93,11 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/XPocketMC/clearlagg) if you have any improvements or bug fixes.
+Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/KnosTx/ClearLagg) if you have any improvements or bug fixes.
 
 ## Acknowledgements
 
 - PocketMine-MP for providing the API and platform to develop this plugin.
 - All contributors and users for their support and feedback.
 ---
-Created by *XPocketMC*
+Created by **ClousCloud Team**
