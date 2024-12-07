@@ -7,5 +7,4 @@ branches:
 projects: 
   ClearLagg:
     path: ""
-    libs:
 ...
