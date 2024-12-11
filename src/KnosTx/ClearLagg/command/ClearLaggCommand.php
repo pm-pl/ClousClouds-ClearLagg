@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file part of
+ * This file is part of
  *    ___ _              _
  *   / __| |___ __ _ _ _| |   __ _ __ _ __ _
  *  | (__| / -_) _` | '_| |__/ _` / _` / _` |
@@ -10,8 +10,7 @@
  * @license GPL-3.0
  * @author KnosTx
  * @link https://github.com/KnosTx/ClearLagg
- * ©Copyright 2024 KnosTx
- *
+ * Copyright is protected by the Law of the country.
  *
  */
 
