@@ -1,45 +1,24 @@
 <?php
 
-/*
- * This file part of
- *    ___ _              _
- *   / __| |___ __ _ _ _| |   __ _ __ _ __ _
- *  | (__| / -_) _` | '_| |__/ _` / _` / _` |
- *   \___|_\___\__,_|_| |____\__,_\__, \__, |
- *                                |___/|___/
- * @license GPL-3.0
- * @author KnosTx
- * @link https://github.com/KnosTx/ClearLagg
- * ©Copyright 2024 KnosTx
- *
- *
- */
-
-declare(strict_types=1);
-
 namespace KnosTx\ClearLagg\manager;
 
 use KnosTx\ClearLagg\Main;
-use pocketmine\command\CommandSender;
-use pocketmine\utils\TextFormat;
-use function count;
 
 class StatsManager{
 
-	private $plugin;
+    public Main $plugin;
+    private $itemsCleared;
 
-	public function __construct(Main $plugin){
-		$this->plugin = $plugin;
-	}
+    public function __construct(Main $plugin){
+        $this->plugin = $plugin;
+        $this->itemsCleared = 0;
+    }
 
-	public function sendStats(CommandSender $sender) : void{
-		$worldCount = count($this->plugin->getServer()->getWorldManager()->getWorlds());
-		$entityCount = 0;
-		foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world){
-			$entityCount += count($world->getEntities());
-		}
+    public function incrementItemsCleared(int $count = 1): void{
+        $this->itemsCleared += $count;
+    }
 
-		$sender->sendMessage(TextFormat::YELLOW . "Server Stats:");
-		$sender->sendMessage(TextFormat::GOLD . "Worlds: " . TextFormat::WHITE . $worldCount);
-	}
+    public function getItemsCleared(): int{
+        return $this->itemsCleared;
+    }
 }
