@@ -76,6 +76,7 @@ class ClearLaggManager{
 	}
 
 	public function clearItems() : void{
+		$config = $this->plugin->getConfig();
 		$this->clearMessage = $config->get("clear-message", "§aGarbage collected correctly.");
 		foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world){
 			foreach ($world->getEntities() as $entity){
