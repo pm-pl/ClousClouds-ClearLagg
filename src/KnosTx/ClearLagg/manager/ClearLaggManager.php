@@ -43,9 +43,11 @@ class ClearLaggManager{
 		$config = $this->plugin->getConfig();
 		$this->clearInterval = $config->get("clear-interval", 300);
 		$this->clearMessage = $config->get("clear-message", "§aGarbage collected correctly.");
-if ($this->clearMessage === null || $this->clearMessage === "") {
-    $this->clearMessage = "§aGarbage collected correctly.";
-}
+
+		if ($this->clearMessage === null || $this->clearMessage === "") {
+			$this->clearMessage = "§aGarbage collected correctly.";
+		}
+
 		$this->warningMessage = $config->get("warning-message", "§cPicking up trash in{time}...");
 		$this->broadcastInterval = $config->get("broadcast-interval", 15);
 		$this->broadcastMessage = $config->get("broadcast-message", "§bThe items will be deleted in{time} seconds.");
@@ -74,6 +76,7 @@ if ($this->clearMessage === null || $this->clearMessage === "") {
 	}
 
 	public function clearItems() : void{
+		$this->clearMessage = $config->get("clear-message", "§aGarbage collected correctly.");
 		foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world){
 			foreach ($world->getEntities() as $entity){
 				if ($entity instanceof ItemEntity){
