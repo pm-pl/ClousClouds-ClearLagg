@@ -41,6 +41,5 @@ class StatsManager{
 
 		$sender->sendMessage(TextFormat::YELLOW . "Server Stats:");
 		$sender->sendMessage(TextFormat::GOLD . "Worlds: " . TextFormat::WHITE . $worldCount);
-		$sender->sendMessage(TextFormat::GOLD . "Entities: " . TextFormat::WHITE . $entityCount);
 	}
 }
