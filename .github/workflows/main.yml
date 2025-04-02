@@ -2,7 +2,7 @@ name: PHP-CS-Fixer
 
 on:
   pull_request:
-  workflows_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: write
