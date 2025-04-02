@@ -121,7 +121,7 @@ class Main extends PluginBase
 	{
 		if ($this->timeRemaining <= 5 && $this->timeRemaining > 0) {
 			$this->getServer()->broadcastMessage(
-				$this->clearLaggManager->getWarningMessage($this->timeRemaining)
+				$this->clearLaggManager->getWarningMessage()
 			);
 		}
 
