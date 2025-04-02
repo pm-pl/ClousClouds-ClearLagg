@@ -26,13 +26,13 @@ use function str_replace;
 
 class ClearLaggManager{
 
-	private $plugin;
-	private $clearInterval;
-	private $clearMessage;
-	private $warningMessage;
-	private $broadcastInterval;
-	private $broadcastMessage;
-	private $timeRemaining;
+	private Main $plugin;
+	private int $clearInterval;
+	private string $clearMessage;
+	private string $warningMessage;
+	private int $broadcastInterval;
+	private string $broadcastMessage;
+	private int $timeRemaining;
 
 	public function __construct(Main $plugin){
 		$this->plugin = $plugin;
@@ -47,10 +47,10 @@ class ClearLaggManager{
 			$this->clearMessage = "§aGarbage collected correctly.";
 		}
 
-		$this->warningMessage = $config->get("warning-message", "§cPicking up trash in{time}...");
+		$this->warningMessage = $config->get("warning-message", "§cPicking up trash in {time}...");
 		$this->broadcastInterval = $config->get("broadcast-interval", 15);
-		$this->broadcastMessage = $config->get("broadcast-message", "§bThe items will be deleted in{time} seconds.");
-		$this->timeRemaining = $config->getNested("notify-players.countdown", 299);
+		$this->broadcastMessage = $config->get("broadcast-message", "§bThe items will be deleted in {time} seconds.");
+		$this->timeRemaining = $config->getNested("notify-players.countdown", 300);
 
 		$this->plugin->getScheduler()->scheduleRepeatingTask(new ClosureTask(function() : void{
 			$this->onTick();
@@ -63,7 +63,7 @@ class ClearLaggManager{
 
 	private function onTick() : void{
 		if ($this->timeRemaining <= 5 && $this->timeRemaining > 0){
-			Server::getInstance()->broadcastMessage(str_replace("{time}", (string) $this->timeRemaining, $this->warningMessage));
+			Server::getInstance()->broadcastMessage(str_replace("{time}", (string) $this->timeRemaining, $this->getWarningMessage()));
 		}
 
 		if ($this->timeRemaining <= 0){
@@ -87,7 +87,7 @@ class ClearLaggManager{
 		Server::getInstance()->broadcastMessage($this->clearMessage);
 	}
 
-	public function getWarningMessage() : void{
+	public function getWarningMessage() : string{
 		return $this->warningMessage;
 	}
 
