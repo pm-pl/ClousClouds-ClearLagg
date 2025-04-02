@@ -1,17 +1,14 @@
 <?php
 
-/*
- * This file is part of
- *    ___ _              _
- *   / __| |___ __ _ _ _| |   __ _ __ _ __ _
- *  | (__| / -_) _` | '_| |__/ _` / _` / _` |
- *   \___|_\___\__,_|_| |____\__,_\__, \__, |
- *                                |___/|___/
+/**
+ * ClearLagg Plugin
+ *
+ * This file is part of the ClearLagg plugin for PocketMine-MP.
+ *
  * @license GPL-3.0
  * @author KnosTx
  * @link https://github.com/KnosTx/ClearLagg
  * Copyright is protected by the Law of the country.
- *
  */
 
 declare(strict_types=1);
@@ -31,53 +28,91 @@ use function count;
 use function str_replace;
 use function strtolower;
 
-class Main extends PluginBase{
+class Main extends PluginBase
+{
+	/** @var ClearLaggManager */
+	private ClearLaggManager $clearLaggManager;
 
-	private $clearLaggManager;
-	private $statsManager;
-	private $clearTaskHandler;
-	private $broadcastTaskHandler;
-	private $timeRemaining;
+	/** @var StatsManager */
+	private StatsManager $statsManager;
 
-	public function onEnable() : void{
+	/** @var TaskHandler|null */
+	private ?TaskHandler $clearTaskHandler = null;
+
+	/** @var TaskHandler|null */
+	private ?TaskHandler $broadcastTaskHandler = null;
+
+	/** @var int */
+	private int $timeRemaining;
+
+	public function onEnable(): void
+	{
 		$this->saveDefaultConfig();
 		$this->clearLaggManager = new ClearLaggManager($this);
 		$this->statsManager = new StatsManager($this);
 
-		$this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
+		$this->timeRemaining = $this->getConfig()->getInt("auto-clear-interval", 300);
 
-		$this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function() : void{
-			$this->onTick();
-		}), 20);
+		$this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(
+			function (): void {
+				$this->onTick();
+			}
+		), 20);
 
-		$broadcastInterval = $this->getConfig()->get("broadcast-interval", 15);
-		$this->broadcastTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function() : void{
-			$this->broadcastTime();
-		}), $broadcastInterval * 20);
+		$broadcastInterval = $this->getConfig()->getInt("broadcast-interval", 15);
+		$this->broadcastTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(
+			function (): void {
+				$this->broadcastTime();
+			}
+		), $broadcastInterval * 20);
 	}
 
-	public function onDisable() : void{
-		if ($this->clearTaskHandler instanceof TaskHandler){
+	public function onDisable(): void
+	{
+		if ($this->clearTaskHandler !== null) {
 			$this->clearTaskHandler->cancel();
 		}
-		if ($this->broadcastTaskHandler instanceof TaskHandler){
+		if ($this->broadcastTaskHandler !== null) {
 			$this->broadcastTaskHandler->cancel();
 		}
 	}
 
-	public function getClearLaggManager() : ClearLaggManager{
+	/**
+	 * Retrieves the ClearLaggManager instance.
+	 *
+	 * @return ClearLaggManager
+	 */
+	public function getClearLaggManager(): ClearLaggManager
+	{
 		return $this->clearLaggManager;
 	}
 
-	public function getStatsManager() : StatsManager{
+	/**
+	 * Retrieves the StatsManager instance.
+	 *
+	 * @return StatsManager
+	 */
+	public function getStatsManager(): StatsManager
+	{
 		return $this->statsManager;
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
-		if (strtolower($command->getName()) === "clearlagg"){
-			if (count($args) > 0 && strtolower($args[0]) === "stats"){
+	/**
+	 * Handles commands related to ClearLagg.
+	 *
+	 * @param CommandSender $sender The sender of the command
+	 * @param Command $command The command executed
+	 * @param string $label The command label
+	 * @param array $args Command arguments
+	 *
+	 * @return bool Whether the command was successful
+	 */
+	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
+	{
+		if (strtolower($command->getName()) === "clearlagg") {
+			if (!empty($args) && strtolower($args[0]) === "stats") {
 				(new StatsCommand($this))->execute($sender);
-			} else{
+			} else {
 				$this->clearLaggManager->clearItems();
 				$sender->sendMessage(TextFormat::GREEN . "Items cleared!");
 			}
@@ -86,21 +121,33 @@ class Main extends PluginBase{
 		return false;
 	}
 
-	private function onTick() : void{
-		if ($this->timeRemaining <= 5 && $this->timeRemaining > 0){
-			$this->getServer()->broadcastMessage($this->clearLaggManager->getWarningMessage($this->timeRemaining));
+	/**
+	 * Handles the auto-clear tick countdown and execution.
+	 */
+	private function onTick(): void
+	{
+		if ($this->timeRemaining <= 5 && $this->timeRemaining > 0) {
+			$this->getServer()->broadcastMessage(
+				$this->clearLaggManager->getWarningMessage($this->timeRemaining)
+			);
 		}
 
-		if ($this->timeRemaining <= 0){
+		if ($this->timeRemaining <= 0) {
 			$this->clearLaggManager->clearItems();
 			$this->statsManager->incrementItemsCleared();
-			$this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
-		} else{
+			$this->timeRemaining = $this->getConfig()->getInt("auto-clear-interval", 300);
+		} else {
 			$this->timeRemaining--;
 		}
 	}
 
-	private function broadcastTime() : void{
-		$this->getServer()->broadcastMessage(str_replace("{time}", (string) $this->timeRemaining, $this->getConfig()->get("broadcast-message", "§bThe items will be deleted in{time} seconds.")));
+	/**
+	 * Broadcasts the remaining time before auto-clear.
+	 */
+	private function broadcastTime(): void
+	{
+		$messageTemplate = $this->getConfig()->getString("broadcast-message", "§bThe items will be deleted in {time} seconds.");
+		$message = str_replace("{time}", (string) $this->timeRemaining, $messageTemplate);
+		$this->getServer()->broadcastMessage($message);
 	}
 }
