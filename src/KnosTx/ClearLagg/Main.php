@@ -48,7 +48,7 @@ class Main extends PluginBase
 		$this->clearLaggManager = new ClearLaggManager($this);
 		$this->statsManager = new StatsManager($this);
 
-		$this->timeRemaining = $this->getConfig()->getInt("auto-clear-interval", 300);
+		$this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
 
 		$this->clearTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(
 			function () : void {
@@ -56,7 +56,7 @@ class Main extends PluginBase
 			}
 		), 20);
 
-		$broadcastInterval = $this->getConfig()->getInt("broadcast-interval", 15);
+		$broadcastInterval = $this->getConfig()->get("broadcast-interval", 15);
 		$this->broadcastTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(
 			function () : void {
 				$this->broadcastTime();
@@ -128,7 +128,7 @@ class Main extends PluginBase
 		if ($this->timeRemaining <= 0) {
 			$this->clearLaggManager->clearItems();
 			$this->statsManager->incrementItemsCleared();
-			$this->timeRemaining = $this->getConfig()->getInt("auto-clear-interval", 300);
+			$this->timeRemaining = $this->getConfig()->get("auto-clear-interval", 300);
 		} else {
 			$this->timeRemaining--;
 		}
@@ -139,7 +139,7 @@ class Main extends PluginBase
 	 */
 	private function broadcastTime() : void
 	{
-		$messageTemplate = $this->getConfig()->getString("broadcast-message", "§bThe items will be deleted in {time} seconds.");
+		$messageTemplate = $this->getConfig()->get("broadcast-message", "§bThe items will be deleted in {time} seconds.");
 		$message = str_replace("{time}", (string) $this->timeRemaining, $messageTemplate);
 		$this->getServer()->broadcastMessage($message);
 	}
