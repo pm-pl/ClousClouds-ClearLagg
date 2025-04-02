@@ -87,7 +87,7 @@ class ClearLaggManager{
 		Server::getInstance()->broadcastMessage($this->clearMessage);
 	}
 
-	public function getWarningMessage() : string{
+	public function getWarningMessage(int $timeRemaining) : string{
 		return $this->warningMessage;
 	}
 
