@@ -29,7 +29,6 @@ class ClearLaggManager{
 	private Main $plugin;
 	private int $clearInterval;
 	private string $clearMessage;
-	private string $warningMessage;
 	private int $broadcastInterval;
 	private string $broadcastMessage;
 	private int $timeRemaining;
@@ -47,7 +46,6 @@ class ClearLaggManager{
 			$this->clearMessage = "§aGarbage collected correctly.";
 		}
 
-		$this->warningMessage = $config->get("warning-message", "§cPicking up trash in {time}...");
 		$this->broadcastInterval = $config->get("broadcast-interval", 15);
 		$this->broadcastMessage = $config->get("broadcast-message", "§bThe items will be deleted in {time} seconds.");
 		$this->timeRemaining = $config->getNested("notify-players.countdown", 300);
@@ -62,10 +60,6 @@ class ClearLaggManager{
 	}
 
 	private function onTick() : void{
-		if ($this->timeRemaining <= 5 && $this->timeRemaining > 0){
-			Server::getInstance()->broadcastMessage(str_replace("{time}", (string) $this->timeRemaining, $this->getWarningMessage()));
-		}
-
 		if ($this->timeRemaining <= 0){
 			$this->clearItems();
 			$this->timeRemaining = $this->clearInterval;
@@ -85,10 +79,6 @@ class ClearLaggManager{
 			}
 		}
 		Server::getInstance()->broadcastMessage($this->clearMessage);
-	}
-
-	public function getWarningMessage(int $timeRemaining) : string{
-		return $this->warningMessage;
 	}
 
 	private function broadcastTime() : void{
