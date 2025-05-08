@@ -1,7 +1,7 @@
 # ClearLagg configuration file
 
 # Please Don't Edit configuration version
-config-version: 3
+config-version: 4
 
 # Time in seconds between automatic clears
 clear-interval: 300
@@ -26,5 +26,4 @@ notify-players:
 
 # Messages
 clear-message: "§aGarbage collected correctly."
-warning-message: "§cPicking up trash in {time}..."
 broadcast-message: "§bThe items will be deleted in {time} seconds."
