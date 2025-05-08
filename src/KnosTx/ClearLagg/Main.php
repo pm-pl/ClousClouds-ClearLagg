@@ -33,17 +33,12 @@ use function strtolower;
 class Main extends PluginBase
 {
 	private ClearLaggManager $clearLaggManager;
-
 	private StatsManager $statsManager;
-
 	private ?TaskHandler $clearTaskHandler = null;
-
 	private ?TaskHandler $broadcastTaskHandler = null;
-
 	private int $timeRemaining;
 
-	public function onEnable() : void
-	{
+	public function onEnable() : void {
 		$this->saveDefaultConfig();
 		$this->clearLaggManager = new ClearLaggManager($this);
 		$this->statsManager = new StatsManager($this);
@@ -64,8 +59,7 @@ class Main extends PluginBase
 		), $broadcastInterval * 20);
 	}
 
-	public function onDisable() : void
-	{
+	public function onDisable() : void {
 		if ($this->clearTaskHandler !== null) {
 			$this->clearTaskHandler->cancel();
 		}
@@ -77,16 +71,14 @@ class Main extends PluginBase
 	/**
 	 * Retrieves the ClearLaggManager instance.
 	 */
-	public function getClearLaggManager() : ClearLaggManager
-	{
+	public function getClearLaggManager() : ClearLaggManager {
 		return $this->clearLaggManager;
 	}
 
 	/**
 	 * Retrieves the StatsManager instance.
 	 */
-	public function getStatsManager() : StatsManager
-	{
+	public function getStatsManager() : StatsManager {
 		return $this->statsManager;
 	}
 
@@ -100,8 +92,7 @@ class Main extends PluginBase
 	 *
 	 * @return bool Whether the command was successful
 	 */
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool
-	{
+	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool {
 		if (strtolower($command->getName()) === "clearlagg") {
 			if (!empty($args) && strtolower($args[0]) === "stats") {
 				(new StatsCommand($this))->execute($sender);
@@ -117,14 +108,7 @@ class Main extends PluginBase
 	/**
 	 * Handles the auto-clear tick countdown and execution.
 	 */
-	private function onTick() : void
-	{
-		if ($this->timeRemaining <= 5 && $this->timeRemaining > 0) {
-			$this->getServer()->broadcastMessage(
-				$this->clearLaggManager->getWarningMessage()
-			);
-		}
-
+	private function onTick() : void {
 		if ($this->timeRemaining <= 0) {
 			$this->clearLaggManager->clearItems();
 			$this->statsManager->incrementItemsCleared();
@@ -137,8 +121,7 @@ class Main extends PluginBase
 	/**
 	 * Broadcasts the remaining time before auto-clear.
 	 */
-	private function broadcastTime() : void
-	{
+	private function broadcastTime() : void {
 		$messageTemplate = $this->getConfig()->get("broadcast-message", "§bThe items will be deleted in {time} seconds.");
 		$message = str_replace("{time}", (string) $this->timeRemaining, $messageTemplate);
 		$this->getServer()->broadcastMessage($message);
