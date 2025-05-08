@@ -23,7 +23,7 @@ use KnosTx\ClearLagg\Main;
 class StatsManager{
 
 	public Main $plugin;
-	private $itemsCleared;
+	private int $itemsCleared;
 
 	public function __construct(Main $plugin){
 		$this->plugin = $plugin;
