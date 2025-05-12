@@ -16,7 +16,7 @@ ClearLagg is a plugin for PocketMine-MP designed to reduce lag by periodically c
 
 ## Installation
 
-1. Download the latest release of ClearLagg from [Poggit](https://poggit.pmmp.io/p/clearlagg).
+1. Download the latest release of ClearLagg from [Poggit](https://poggit.pmmp.io/p/ClearLagg).
 2. Place the downloaded `.phar` file into the `plugins` directory of your PocketMine-MP server.
 3. Restart your server to load the plugin.
 
@@ -30,33 +30,33 @@ After installing the plugin, a configuration file `config.yml` will be generated
 # ClearLagg configuration file
 
 # Please Don't Edit configuration ver
-config-version: 3
+config-version: 4
 
 # Time in seconds between automatic clears
 clear-interval: 300
 
 # Time interval in seconds for countdown message broadcast
-broadcast-interval: 15
+broadcast-interval: 150
 
 # World-specific settings
 worlds:
   world:
     enable-auto-clear: true
-  world_nether:
-    enable-auto-clear: true
-  world_the_end:
-    enable-auto-clear: true
+# world_nether:
+   # enable-auto-clear: true
+# world_the_end:
+   # enable-auto-clear: true
 
 # Player notifications
 notify-players:
   enable: true
-  message: "All dropped items will be cleared in 299 seconds!"
-  countdown: 299
+  message: "All dropped items will be cleared in 300 seconds!"
+  countdown: 300
 
 # Messages
-clear-message: "§aGarbage collected correctly."
-warning-message: "§cPicking up trash in{time}..."
-broadcast-message: "§bThe items will be deleted in{time} seconds."
+clear-message: "§aItems cleared!"
+warning-message: "§cPicking up trash in {time}..."
+broadcast-message: "§bThe items will be deleted in {time} seconds."
 ```
 
 ## Commands
@@ -93,7 +93,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/KnosTx/ClearLagg) if you have any improvements or bug fixes.
+Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/ClousClouds/ClearLagg) if you have any improvements or bug fixes.
 
 ## Acknowledgements
 

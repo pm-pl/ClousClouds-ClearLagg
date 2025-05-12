@@ -28,7 +28,7 @@ use pocketmine\plugin\PluginOwnedTrait;
 class ClearLaggCommand extends Command implements PluginOwned{
 	use PluginOwnedTrait;
 
-	private $plugin;
+	private Main $plugin;
 
 	public function __construct(Main $plugin){
 		parent::__construct("clearlagg", "Clear lag by removing items", "/clearlagg [stats]", ["cl"]);
@@ -37,22 +37,21 @@ class ClearLaggCommand extends Command implements PluginOwned{
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
-		if (!$this->testPermission($sender)){
+		if(!$this->testPermission($sender)){
 			$sender->sendMessage("You don't have permission to use this command.");
 			return false;
 		}
 
 		try{
-			if (isset($args[0]) && $args[0] === "stats"){
+			if(isset($args[0]) && $args[0] === "stats"){
 				$statsCommand = new StatsCommand($this->plugin);
 				return $statsCommand->execute($sender);
-			} else{
+			}else{
 				$this->plugin->getClearLaggManager()->clearItems();
-				$sender->sendMessage("Items cleared successfully.");
 			}
-		} catch (\Exception $e){
+		}catch(\Exception $e){
 			$sender->sendMessage("An error occurred: " . $e->getMessage());
-			$this->plugin->getLogger()->error("Error in ClearLaggCommand: " . $e->getMessage(), $e);
+			$this->plugin->getLogger()->error("Error in ClearLaggCommand: " . $e->getMessage());
 			return false;
 		}
 
