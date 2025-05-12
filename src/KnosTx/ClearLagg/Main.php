@@ -26,7 +26,6 @@ use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\scheduler\TaskHandler;
-use pocketmine\utils\TextFormat;
 use function str_replace;
 use function strtolower;
 
