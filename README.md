@@ -36,27 +36,27 @@ config-version: 3
 clear-interval: 300
 
 # Time interval in seconds for countdown message broadcast
-broadcast-interval: 15
+broadcast-interval: 150
 
 # World-specific settings
 worlds:
   world:
     enable-auto-clear: true
-  world_nether:
-    enable-auto-clear: true
-  world_the_end:
-    enable-auto-clear: true
+# world_nether:
+   # enable-auto-clear: true
+# world_the_end:
+   # enable-auto-clear: true
 
 # Player notifications
 notify-players:
   enable: true
-  message: "All dropped items will be cleared in 299 seconds!"
-  countdown: 299
+  message: "All dropped items will be cleared in 300 seconds!"
+  countdown: 300
 
 # Messages
-clear-message: "§aGarbage collected correctly."
-warning-message: "§cPicking up trash in{time}..."
-broadcast-message: "§bThe items will be deleted in{time} seconds."
+clear-message: "§aItems cleared!"
+warning-message: "§cPicking up trash in {time}..."
+broadcast-message: "§bThe items will be deleted in {time} seconds."
 ```
 
 ## Commands
