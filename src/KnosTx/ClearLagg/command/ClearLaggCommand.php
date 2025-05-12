@@ -48,7 +48,6 @@ class ClearLaggCommand extends Command implements PluginOwned{
 				return $statsCommand->execute($sender);
 			} else{
 				$this->plugin->getClearLaggManager()->clearItems();
-				$sender->sendMessage("Items cleared successfully.");
 			}
 		} catch (\Exception $e){
 			$sender->sendMessage("An error occurred: " . $e->getMessage());
