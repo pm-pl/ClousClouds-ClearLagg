@@ -25,5 +25,5 @@ notify-players:
   countdown: 299
 
 # Messages
-clear-message: "§aGarbage collected correctly."
+clear-message: "§aItems cleared!"
 broadcast-message: "§bThe items will be deleted in {time} seconds."
