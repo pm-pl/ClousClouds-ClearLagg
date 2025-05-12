@@ -51,7 +51,7 @@ class ClearLaggCommand extends Command implements PluginOwned{
 			}
 		}catch(\Exception $e){
 			$sender->sendMessage("An error occurred: " . $e->getMessage());
-			$this->plugin->getLogger()->error("Error in ClearLaggCommand: " . $e->getMessage(), $e);
+			$this->plugin->getLogger()->error("Error in ClearLaggCommand: " . $e->getMessage());
 			return false;
 		}
 
