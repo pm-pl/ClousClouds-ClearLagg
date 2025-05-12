@@ -51,7 +51,7 @@ class Main extends PluginBase
 			}
 		), 20);
 
-		$broadcastInterval = $this->getConfig()->get("broadcast-interval", 15);
+		$broadcastInterval = $this->getConfig()->get("broadcast-interval", 150);
 		$this->broadcastTaskHandler = $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(
 			function() : void{
 				$this->broadcastTime();
@@ -59,7 +59,7 @@ class Main extends PluginBase
 		), $broadcastInterval * 20);
 	}
 
-	public function onDisable() : void {
+	public function onDisable() : void{
 		if($this->clearTaskHandler !== null){
 			$this->clearTaskHandler->cancel();
 		}
@@ -107,7 +107,7 @@ class Main extends PluginBase
 	/**
 	 * Handles the auto-clear tick countdown and execution.
 	 */
-	private function onTick() : void {
+	private function onTick() : void{
 		if($this->timeRemaining <= 0){
 			$this->clearLaggManager->clearItems();
 			$this->statsManager->incrementItemsCleared();
