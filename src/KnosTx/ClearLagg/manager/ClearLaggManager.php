@@ -40,13 +40,13 @@ class ClearLaggManager{
 	public function init() : void{
 		$config = $this->plugin->getConfig();
 		$this->clearInterval = $config->get("clear-interval", 300);
-		$this->clearMessage = $config->get("clear-message", "§aGarbage collected correctly.");
+		$this->clearMessage = $config->get("clear-message", "§aItems cleared!");
 
-		if ($this->clearMessage === null || $this->clearMessage === "") {
-			$this->clearMessage = "§aGarbage collected correctly.";
+		if($this->clearMessage === null || $this->clearMessage === "") {
+			$this->clearMessage = "§aItems cleared!";
 		}
 
-		$this->broadcastInterval = $config->get("broadcast-interval", 15);
+		$this->broadcastInterval = $config->get("broadcast-interval", 150);
 		$this->broadcastMessage = $config->get("broadcast-message", "§bThe items will be deleted in {time} seconds.");
 		$this->timeRemaining = $config->getNested("notify-players.countdown", 300);
 
@@ -60,20 +60,20 @@ class ClearLaggManager{
 	}
 
 	private function onTick() : void{
-		if ($this->timeRemaining <= 0){
+		if($this->timeRemaining <= 0){
 			$this->clearItems();
 			$this->timeRemaining = $this->clearInterval;
-		} else{
+		}else{
 			$this->timeRemaining--;
 		}
 	}
 
 	public function clearItems() : void{
 		$config = $this->plugin->getConfig();
-		$this->clearMessage = $config->get("clear-message", "§aGarbage collected correctly.");
-		foreach (Server::getInstance()->getWorldManager()->getWorlds() as $world){
-			foreach ($world->getEntities() as $entity){
-				if ($entity instanceof ItemEntity){
+		$this->clearMessage = $config->get("clear-message", "§aItems cleared!");
+		foreach(Server::getInstance()->getWorldManager()->getWorlds() as $world){
+			foreach($world->getEntities() as $entity){
+				if($entity instanceof ItemEntity){
 					$entity->flagForDespawn();
 				}
 			}
